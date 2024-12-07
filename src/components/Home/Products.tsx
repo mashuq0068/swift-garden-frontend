@@ -198,10 +198,10 @@ const Products = () => {
   }, []);
 
   return (
-    <div className="min-h-screen mt-20 py-10">
-    <h1 className="text-center text-4xl mb-12 font-bold text-gray-800">
+    <div className="min-h-screen mt-14 ">
+    {/* <h1 className="text-center text-4xl mb-12 font-bold text-gray-800">
       Our <span className="text-green-500">Products</span>
-    </h1>
+    </h1> */}
     <div className="container mx-auto px-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product, i) => (
@@ -225,14 +225,14 @@ const Products = () => {
             </div>
             {/* Content Section */}
             <div className="p-4 space-y-2">
-              <h3 className="text-gray-800 font-semibold text-lg truncate">
+              <h3 className="text-gray-800 font-medium text-lg truncate">
                 {product.title}
               </h3>
               <p className="text-gray-500 text-sm line-clamp-2">
                 {product.description}
               </p>
               <div className="flex items-center justify-between">
-                <span className="text-xl font-bold text-gray-900">
+                <span className="text-xl font-semibold text-gray-900">
                   €{product.price.toFixed(2)}
                 </span>
               </div>
