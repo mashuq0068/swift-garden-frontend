@@ -1,10 +1,12 @@
-import type { Metadata } from "next";
+"use client";
+
 import { Work_Sans } from "next/font/google";
 import "./globals.css";
 import "aos/dist/aos.css";
-import { FiShoppingCart } from "react-icons/fi";
-import { AiOutlineUser } from "react-icons/ai";
-import Logo from "@/components/Home/Logo";
+import Navbar from "@/components/Shared/Navbar";
+import ToastProvider from "@/lib/Toaster";
+import Image from "next/image";
+import useLoadingStore from "@/store/loadingStore";
 
 // Import Google Font
 const spinnaker = Work_Sans({
@@ -13,66 +15,37 @@ const spinnaker = Work_Sans({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Swift Garden",
-  description: "Buy Fresh and Organic Vegetables",
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { loading } = useLoadingStore();
   return (
-    <html lang="en" className="overflow-x-hidden m-0 p-0">
+    <html lang="en" className="overflow-x-hidden md:overflow-x-visible m-0 p-0">
       <body
-        className={`${spinnaker.className}  bg-gray-100 overflow-x-hidden overflow-y-hidden mx-auto`}
+        className={`${spinnaker.className}  bg-gray-100 overflow-x-hidden overflow-y-auto mx-auto`}
       >
-       <div style={{position:'sticky' , top:'0px' ,zIndex:'999'}} className="z-50 bg-gray-100">
-       <header className="py-6 px-4 container mx-auto ">
-          <div className="flex flex-wrap justify-between items-center container mx-auto">
-            {/* Logo */}
-            <div className="flex items-center space-x-2">
-              <Logo />
-            </div>
-
-            {/* Search Bar (Hidden on Small Screens) */}
-            <div className="hidden lg:flex items-center justify-center  flex-1 ">
-              <input
-                type="text"
-                placeholder="Search products..."
-                className="w-[70%]  border border-gray-300 rounded-l-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-              <button className="bg-green-500 border-green-500 border text-white px-4 py-2 rounded-r-md hover:bg-green-500">
-                Search
-              </button>
-            </div>
-
-            {/* Icons */}
-            <div className="flex items-center space-x-4">
-              <FiShoppingCart className="text-2xl text-gray-700 hover:text-green-500 transition" />
-              <AiOutlineUser className="text-2xl text-gray-700 hover:text-green-500 transition" />
-            </div>
-
-            {/* Mobile Search Bar Button */}
-          </div>
-
-          {/* Mobile Search Bar (Appears on Small Screens) */}
-          <div className="lg:hidden flex mt-4">
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-            <div className="lg:hidden flex items-center border-2 border-green-500 h-full space-x-4">
-              <button className="bg-green-500 text-white h-full px-3 py-2 rounded-md hover:bg-green-500">
-                Search
-              </button>
-            </div>
-          </div>
+        <ToastProvider />
+        <div
+          aria-live="polite"
+          aria-busy={loading}
+          className={`animated ${
+            loading ? "flex" : "hidden"
+          } LoadingOverlay text-center center-full-screen`}
+        >
+          <Image
+            alt="Loading spinner"
+            className="progressCustom-logo"
+            src={"/images/spin.svg"}
+            width={80}
+            height={80}
+          />
+        </div>
+        <header className="bg-gray-100 w-full sticky top-0 z-50 drop-shadow-sm shadow-sm">
+          <Navbar />
         </header>
-       </div>
-        <div>{children}</div>
+        {children}
       </body>
     </html>
   );

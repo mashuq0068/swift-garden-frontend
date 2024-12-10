@@ -1,6 +1,4 @@
 "use client"
-import { MdOutlineLocalShipping, MdOutlineVerified, MdOutlineVerifiedUser } from "react-icons/md";
-import { GiFarmer } from "react-icons/gi";
 import Aos from "aos";
 import { useEffect } from "react";
 import { CiDeliveryTruck } from "react-icons/ci";
