@@ -1,12 +1,12 @@
 "use client"
 
 import {
-  BadgeCheck,
-  Bell,
+
   ChevronsUpDown,
-  CreditCard,
+
   LogOut,
-  Sparkles,
+
+  User,
 } from "lucide-react"
 
 import {
@@ -23,12 +23,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar"
+import Link from "next/link"
+
 
 export function NavUser({
   user,
@@ -39,76 +35,64 @@ export function NavUser({
     avatar: string
   }
 }) {
-  const { isMobile } = useSidebar()
+  // const { isMobile } = useSidebar()
 
   return (
-    <SidebarMenu>
-      <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-            >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
-              </div>
-              <ChevronsUpDown className="ml-auto size-4" />
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
-            align="end"
-            sideOffset={4}
-          >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
-                </div>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </SidebarMenuItem>
-    </SidebarMenu>
+    <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <button className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100">
+        <Avatar className="h-8 w-8 rounded-lg">
+          <AvatarImage
+            src={
+              "https://tse1.mm.bing.net/th?id=OIP.kdMwybQdHDRFYF5Avk1DIQHaHa&pid=Api&P=0&h=220"
+            }
+            alt={"Code Prophet"}
+          />
+          <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+        </Avatar>
+        <div className="hidden lg:flex flex-col text-left text-sm">
+          <span className="truncate font-semibold">Swift Garden</span>
+          <span className="truncate text-xs">swift@gmail.com</span>
+        </div>
+        <ChevronsUpDown className="ml-auto size-4 hidden lg:block" />
+      </button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent
+      className="w-56 rounded-lg"
+      side="bottom"
+      align="end"
+      sideOffset={4}
+    >
+      <DropdownMenuLabel className="p-0 font-normal">
+        <div className="flex justify-center items-center gap-2 px-3 py-2 text-left text-sm">
+          <Avatar className="h-8 w-8 rounded-lg">
+            <AvatarImage
+              src={
+                "https://tse1.mm.bing.net/th?id=OIP.kdMwybQdHDRFYF5Avk1DIQHaHa&pid=Api&P=0&h=220"
+              }
+            />
+            <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+          </Avatar>
+        </div>
+      </DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuGroup>
+        <DropdownMenuItem>
+          <User />
+          <Link href="/view-profile">See Profile</Link>
+        </DropdownMenuItem>
+      </DropdownMenuGroup>
+      <DropdownMenuSeparator />
+      {/* <DropdownMenuItem>
+        <LuUserCheck />
+        <Link to="/create-user">Create User</Link>
+      </DropdownMenuItem>
+      <DropdownMenuSeparator /> */}
+      <DropdownMenuItem>
+        <LogOut />
+        <Link href="/">Log out</Link>
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
   )
 }

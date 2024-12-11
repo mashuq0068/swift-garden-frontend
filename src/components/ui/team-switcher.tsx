@@ -19,7 +19,7 @@ interface Team {
 // Dummy team data
 const teams: Team[] = [
   {
-    name: "cpMed",
+    name: "Swift Garden",
     plan: "Control Panel",
     logo: "", // Replace with actual path to your logo
   },
@@ -37,17 +37,12 @@ export const TeamSwitcher: React.FC = () => {
           className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
         >
           <div className="flex aspect-square size-8 items-center justify-center rounded-lg text-sidebar-primary-foreground">
-            <div className="flex items-center space-x-3">
+           
               {/* Icon Section */}
               <div className="flex items-center space-x-1">
-                <FaLeaf className="text-green-500 text-4xl" />
+                <FaLeaf className="text-green-500 text-2xl" />
               </div>
-
-              {/* Text Section */}
-              <h1 className="text-2xl md:text-3xl font-bold text-green-500">
-                Swift <span className="text-green-500">Garden</span>
-              </h1>
-            </div>
+           
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">{activeTeam.name}</span>
