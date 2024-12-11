@@ -3,15 +3,13 @@
 import Image from "next/image";
 import { FaUserAlt, FaEnvelope, FaLock, FaImage } from "react-icons/fa";
 import { useState } from "react";
-import { useSignUpMutation } from "@/redux/features/auth/auth.api";
+
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-
-
-
+import { useSignUpMutation } from "@/redux/features/auth/authApi";
 
 const RegistrationPage = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [imageUrl, setImageUrl] = useState("");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -32,7 +30,7 @@ const RegistrationPage = () => {
     try {
       await signUp(userData).unwrap();
       toast.success("You successfully created your account");
-       router.push('/login')
+      router.push("/login");
       setFullName("");
       setEmail("");
       setPassword("");
@@ -73,7 +71,7 @@ const RegistrationPage = () => {
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition"
                 placeholder="Full Name"
                 required
               />
@@ -86,7 +84,7 @@ const RegistrationPage = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition"
                 placeholder="Email Address"
                 required
               />
@@ -99,7 +97,7 @@ const RegistrationPage = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition"
                 placeholder="Password"
                 required
               />
@@ -112,7 +110,7 @@ const RegistrationPage = () => {
                 type="url"
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
-                className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition"
                 placeholder="Image URL (optional)"
               />
             </div>
@@ -120,7 +118,7 @@ const RegistrationPage = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-3 bg-purple-500 text-white font-semibold rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+              className="w-full py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
             >
               Sign Up
             </button>
@@ -129,7 +127,7 @@ const RegistrationPage = () => {
           <div className="text-center text-gray-500">
             <p>
               Already have an account?{" "}
-              <a href="/login" className="text-purple-600 hover:underline">
+              <a href="/login" className="text-green-500 hover:underline">
                 Log in
               </a>
             </p>

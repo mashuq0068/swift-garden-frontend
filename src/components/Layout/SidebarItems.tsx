@@ -7,9 +7,16 @@ import {
   List,
   Banknote,
 } from "lucide-react";
+import { AiFillProduct } from "react-icons/ai";
+import { 
+  MdStore, 
+  MdRateReview, 
+  MdHistory 
+} from "react-icons/md"; 
 
+const role = "vendor";
 // Sample data with updated sidebar items
-const SidebarItems = {
+const AdminItems = {
   user: {
     name: "shadcn",
     email: "m@example.com",
@@ -18,35 +25,86 @@ const SidebarItems = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/vendor",
+      url: "/admin",
       icon: Monitor,
     },
     {
       title: "Vendor Management",
-      url: "/vendor/vendor-management",
+      url: "/admin/vendor-management",
       icon: Users,
     },
+
+  ],
+};
+const VendorItems = {
+  navMain: [
     {
-      title: "Customer Management",
-      url: "/vendor/customer-management",
-      icon: UserCheck,
+      title: "Dashboard",
+      url: "/vendor",
+      icon: Monitor,
     },
     {
-      title: "Shops",
-      url: "/vendor/shops",
-      icon: ShoppingCart,
+      title: "Shop Management",
+      url: "/vendor/shop-management",
+      icon: MdStore, 
     },
     {
-      title: "Product Categories",
-      url: "/vendor/product-categories",
-      icon: List,
+      title: "Product Management",
+      url: "/vendor/product-management",
+      icon: AiFillProduct, 
     },
     {
-      title: "Transactions",
-      url: "/vendor/transactions",
-      icon: Banknote,
+      title: "Customer Reviews",
+      url: "/vendor/customer-reviews",
+      icon: MdRateReview, 
+    },
+    {
+      title: "Order History",
+      url: "/vendor/order-history",
+      icon: MdHistory, 
     },
   ],
 };
 
+const UserItems = {
+  user: {
+    name: "shadcn",
+    email: "m@example.com",
+    avatar: "/avatars/shadcn.jpg",
+  },
+  navMain: [
+    {
+      title: "Dashboard",
+      url: "/admin",
+      icon: Monitor,
+    },
+    {
+      title: "Vendor Management",
+      url: "/admin/vendor-management",
+      icon: Users,
+    },
+    {
+      title: "Customer Management",
+      url: "/admin/customer-management",
+      icon: UserCheck,
+    },
+    {
+      title: "Shops",
+      url: "/admin/shops",
+      icon: ShoppingCart,
+    },
+    {
+      title: "Product Categories",
+      url: "/admin/product-categories",
+      icon: List,
+    },
+    {
+      title: "Transactions",
+      url: "/admin/transactions",
+      icon: Banknote,
+    },
+  ],
+};
+const SidebarItems =
+  role === "vendor" ? VendorItems : role === "admin" ? AdminItems : UserItems;
 export default SidebarItems;
