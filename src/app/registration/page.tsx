@@ -1,59 +1,57 @@
 "use client";
-
-import Image from "next/image";
-import { FaUserAlt, FaEnvelope, FaLock, FaImage } from "react-icons/fa";
-import { useState } from "react";
-
+import { FaUserAlt, FaEnvelope, FaLock } from "react-icons/fa";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { useSignUpMutation } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { useSignUpMutation } from "@/redux/features/auth/authApi";
 
 const RegistrationPage = () => {
-  const router = useRouter();
-  const [imageUrl, setImageUrl] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [signUp] = useSignUpMutation();
+  const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // Prevent default form submission
+  // Single state for form data, including role
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "",
+  });
 
-    // Handle form submission logic, e.g., sending data to an API
-    const userData = {
-      name: fullName,
-      email: email,
-      password: password,
-      image: imageUrl,
-    };
+  // Handle input change
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
+  // Handle form submission
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
-      await signUp(userData).unwrap();
-      toast.success("You successfully created your account");
+      await signUp(formData).unwrap();
+      toast.success("You registered successfully");
       router.push("/login");
-      setFullName("");
-      setEmail("");
-      setPassword("");
-      setImageUrl("");
-    } catch (err) {
-      console.error("Signup failed:", err);
+      localStorage.setItem("role", formData.role);
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        role: "",
+      });
+    } catch (error) {
+      toast.error(
+        (error as { message?: string })?.message || "Something went wrong"
+      );
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="rounded-lg flex w-full max-w-4xl">
-        {/* Left Side Image */}
-        <div className="hidden md:flex md:w-1/2 relative">
-          <Image
-            src="/images/reg.png"
-            alt="Registration Image"
-            layout="fill"
-            objectFit="cover"
-            className="rounded-l-lg"
-          />
-        </div>
-
+      <div className="rounded-lg flex justify-center w-full max-w-4xl">
         {/* Right Side - Registration Form */}
         <div className="w-full md:w-1/2 p-8 space-y-6">
           <h2 className="text-3xl font-bold text-gray-800 text-center">
@@ -69,8 +67,9 @@ const RegistrationPage = () => {
               <FaUserAlt className="absolute top-[30%] left-3 text-gray-400" />
               <input
                 type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
                 className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition"
                 placeholder="Full Name"
                 required
@@ -82,8 +81,9 @@ const RegistrationPage = () => {
               <FaEnvelope className="absolute top-[30%] left-3 text-gray-400" />
               <input
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition"
                 placeholder="Email Address"
                 required
@@ -95,24 +95,30 @@ const RegistrationPage = () => {
               <FaLock className="absolute top-[30%] left-3 text-gray-400" />
               <input
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
                 className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition"
                 placeholder="Password"
                 required
               />
             </div>
 
-            {/* Image URL */}
+            {/* Role Dropdown */}
             <div className="relative">
-              <FaImage className="absolute top-[30%] left-3 text-gray-400" />
-              <input
-                type="url"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition"
-                placeholder="Image URL (optional)"
-              />
+              <select
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                className="pl-3 pr-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+                required
+              >
+                <option value="" disabled selected>
+                  Select Role
+                </option>
+                <option value="USER">Customer</option>
+                <option value="VENDOR">Vendor</option>
+              </select>
             </div>
 
             {/* Submit Button */}

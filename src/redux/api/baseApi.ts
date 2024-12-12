@@ -21,7 +21,7 @@ function isHydrateAction(action: Action): action is PayloadAction<RootState> {
 
 // Base query
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://bike-rental-backend-six.vercel.app/api",
+  baseUrl: "http://localhost:5000/api",
   // credentials: "include",
   prepareHeaders: (headers) => {
     const token = Cookies.get("token");

@@ -1,80 +1,69 @@
 /* eslint-disable react/no-unescaped-entities */
-"use client"
-import { useLoginMutation } from "@/redux/features/auth/auth.api";
-import Image from "next/image";
+"use client";
+
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import { useEffect, useState } from "react";
-import { useAppDispatch } from "@/redux/hooks";
-import { IUser, setUser } from "@/redux/features/auth/authSlice";
-import Cookies from "js-cookie";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import axios from 'axios'
+import { useLoginMutation } from "@/redux/features/auth/authApi";
+import { IUser, setUser } from "@/redux/features/auth/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import Cookies from "js-cookie";
 
 const LoginPage = () => {
-  const [login, { isLoading, error }] = useLoginMutation();
-  const [search] = useState(null)
- 
-  const router = useRouter()
+  const [signIn] = useLoginMutation();
   const dispatch = useAppDispatch();
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  useEffect(() => {
-    axios.get(`http://localhost:5000/api/users/admins?search=${search}`)
-    .then((res) => {
-      console.log(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  },[])
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
     try {
-      const res = await login({ email, password }).unwrap();
-      
-      if (res?.success) {
-        const { token, data: { name, email: userEmail, role, image } } = res;
-  
-        Cookies.set("token", token, { expires: 7 });
-  
-        const user: IUser = {
-          name,
-          email: userEmail,
-          role,
-          image
-        };
-  
-        dispatch(setUser(user));
-  
-        toast.success("You logged in successfully");
-        router.push("/news-feed");
+      const res = await signIn({ email, password }).unwrap();
+      console.log(res);
+      const userData = res?.data ?? {
+        name: null,
+        email: null,
+        role: null,
+      };
+      const user: IUser = {
+        name: userData?.name,
+        email: userData?.email,
+        role: userData?.role,
+      };
+      // setting cookies to token
+      Cookies.set("token", res?.token);
+      // setting user the persist redux store
+      dispatch(setUser(user));
+
+      const redirectTo = localStorage.getItem("redirectAfterLogin");
+      const role = localStorage.getItem("role");
+      if (role === "VENDOR") {
+        router.push("/vendor");
       } else {
-        toast.error("Invalid email or password");
+        if (redirectTo) {
+          router.push(redirectTo);
+          localStorage.removeItem("redirectAfterLogin");
+        } else {
+          router.push("/");
+        }
       }
-    } catch (err) {
-      console.error("Login failed: ", err);
-      toast.error("Invalid email or password");
+      setEmail("");
+      setPassword("");
+      localStorage.removeItem("role");
+    } catch (error) {
+      toast.error(
+        (error as { message?: string })?.message || "Something went wrong"
+      );
     }
   };
-  
-  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="rounded-lg flex w-full max-w-4xl">
-        <div className="hidden md:flex md:w-1/2 relative">
-          <Image
-            src="/images/login.png"
-            alt="Login Image"
-            layout="fill"
-            objectFit="contain"
-            className="rounded-l-lg"
-          />
-        </div>
-
+      <div className="rounded-lg flex justify-center w-full max-w-4xl">
         <div className="w-full md:w-1/2 p-8 space-y-6">
           <h2 className="text-3xl font-bold text-gray-800 text-center">
             Welcome Back
@@ -91,7 +80,7 @@ const LoginPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition"
                 placeholder="Email Address"
               />
             </div>
@@ -103,24 +92,17 @@ const LoginPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                className="pl-10 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition"
                 placeholder="Password"
               />
             </div>
 
             <button
               type="submit"
-              disabled={isLoading}
-              className="w-full py-3 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+              className="w-full py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
             >
-              {isLoading ? "Logging In..." : "Log In"}
+              Login
             </button>
-
-            {error && (
-              <p className="text-red-500 text-center">
-                {(error as { message?: string }).message}
-              </p>
-            )}
           </form>
 
           <div className="text-center text-gray-500">
@@ -128,12 +110,12 @@ const LoginPage = () => {
               Don't have an account?{" "}
               <a
                 href="/registration"
-                className="text-purple-500 hover:underline"
+                className="text-green-500 hover:underline"
               >
                 Sign Up
               </a>
             </p>
-            <a href="#" className="text-purple-600 hover:underline">
+            <a href="#" className="text-green-500 hover:underline">
               Forgot Password?
             </a>
           </div>
