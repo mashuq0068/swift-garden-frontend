@@ -10,11 +10,15 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"; // Import dialog components
+import { useAddShopMutation } from "@/redux/features/follower/followerApi";
+import toast from "react-hot-toast";
+import { useAppSelector } from "@/redux/hooks";
 
 interface Shop {
   name: string;
   description: string;
   logo: string;
+  userId: string;
 }
 
 interface ShopData {
@@ -23,35 +27,77 @@ interface ShopData {
 }
 
 const initialShopData: ShopData = {
-  exists: true,
+  exists: false,
   shop: {
     name: "Green Veggies Store",
     description:
       "Welcome to Green Veggies Store! We provide fresh vegetables, leafy greens, and other healthy options for your family. Shop with us for freshness and quality.",
-    logo: "https://via.placeholder.com/150", // Placeholder for shop logo
+    logo: "https://via.placeholder.com/150",
+    //  // Placeholder for shop logo
+    userId: "1",
   },
 };
 
 const ShopPage: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
+  const [addShop] = useAddShopMutation();
+  const auth = useAppSelector((state) => state.auth);
+  console.log(auth);
   const [shopData, setShopData] = useState<ShopData>(initialShopData);
+  const [selectedFile, setSelectedFile] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [formValues, setFormValues] = useState({
+    name: "",
+    description: "",
+  });
 
   const handleEditSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
 
+  // handle input change
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
+  // handle image change
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
+    setSelectedFile(file);
     if (file) {
       setSelectedImage(URL.createObjectURL(file)); // Create Blob URL for the selected file
+    }
+  };
+  // handle create shop
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    console.log(formValues);
+    formData.append("name", formValues.name);
+    formData.append("description", formValues.description);
+    formData.append("userId", auth.id as string);
+
+    if (selectedFile) {
+      formData.append("logo", selectedFile);
+    }
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
+    try {
+      const res = await addShop(formData).unwrap();
+      console.log(res);
+      toast.success("Shop created successfully!");
+      localStorage.setItem("shop", res?.data?.id);
+    } catch (error) {
+      console.error("Error creating shop:", error);
+      toast.error("Failed to create the shop.");
     }
   };
 
@@ -117,10 +163,11 @@ const ShopPage: React.FC = () => {
       </div>
     );
   };
-
+  // check is this vendor created shop or not
+  const isShop = localStorage.getItem("shop");
   return (
     <div>
-      {shopData.exists && shopData.shop ? (
+      {isShop ? (
         <>
           <SectionHeader title="My Shop" />
           <div className="shop-dashboard wrapper relative">
@@ -147,7 +194,7 @@ const ShopPage: React.FC = () => {
         <div className="">
           <SectionHeader title="Create Your Shop" />
           <div className="wrapper">
-            <form onSubmit={handleEditSubmit} className="mt-4 space-y-4">
+            <form onSubmit={handleSubmit} className="mt-4 space-y-4">
               <PhotoUploader />
               <div>
                 <label className="form-label" htmlFor="name">
@@ -159,6 +206,7 @@ const ShopPage: React.FC = () => {
                   name="name"
                   placeholder="Enter shop name"
                   className="form-input"
+                  onChange={handleInputChange}
                   required
                 />
               </div>
@@ -171,6 +219,7 @@ const ShopPage: React.FC = () => {
                   name="description"
                   placeholder="Enter shop description"
                   className="form-input"
+                  onChange={handleInputChange}
                   required
                 />
               </div>

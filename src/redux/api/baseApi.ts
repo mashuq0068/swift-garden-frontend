@@ -43,7 +43,6 @@ const customBaseQuery: BaseQueryFn<
   // Set loading to true before starting the request
   dispatch(setLoading(true));
 
-
   try {
     const result = await baseQuery(args, api, extraOptions);
 
@@ -68,7 +67,19 @@ const customBaseQuery: BaseQueryFn<
 const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: customBaseQuery,
-  tagTypes: ["product", "user"],
+  tagTypes: [
+    "product",
+    "user",
+    "shop",
+    "follower",
+    "review",
+    "recentProduct",
+    "flashSale",
+    "order",
+    "transaction",
+    "coupon",
+    "category",
+  ],
   extractRehydrationInfo(action, { reducerPath }): any {
     if (isHydrateAction(action)) {
       return action.payload[reducerPath];

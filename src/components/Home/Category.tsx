@@ -11,38 +11,38 @@ const categories = [
   {
     id: 1,
     name: "Leafy Greens",
-    image: "/images/veg-1.png", // Replace with actual image URL
-    bgColor: "bg-green-0",
+    image: "/images/veg-1.png", 
+   
   },
   {
     id: 2,
     name: "Root Vegetables",
-    image: "/images/veg-2.png", // Replace with actual image URL
-    bgColor: "bg-orange-0",
+    image: "/images/veg-2.png", 
+   
   },
   {
     id: 3,
     name: "Cruciferous",
-    image: "/images/veg-3.png", // Replace with actual image URL
-    bgColor: "bg-yellow-0",
+    image: "/images/veg-3.png", 
+   
   },
   {
     id: 4,
     name: "Gourds & Squashes",
-    image: "/images/veg-4.png", // Replace with actual image URL
-    bgColor: "bg-cyan-0",
+    image: "/images/veg-4.png", 
+  
   },
   {
     id: 5,
     name: "Allium Vegetables",
-    image: "/images/veg-5.png", // Replace with actual image URL
-    bgColor: "bg-blue-0",
+    image: "/images/veg-5.png", 
+  
   },
   {
     id: 6,
     name: "Nightshades",
-    image: "/images/veg-6.png", // Replace with actual image URL
-    bgColor: "bg-green-0",
+    image: "/images/veg-6.png", 
+   
   },
 ];
 

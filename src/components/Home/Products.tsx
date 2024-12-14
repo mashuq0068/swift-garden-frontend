@@ -8,184 +8,184 @@ const products = [
     title: "Fresh Organic Fruit (50gm)",
     description: "Delicious organic fruit packed with nutrients.",
     price: 150,
-    image: "/images/veg-1.png", // Replace with your own images
-    isNew: true,
+    photo: "/images/veg-1.png", // Replace with your own images
+    
   },
   {
     id: 2,
     title: "Orange Juice (5ltr)",
     description: "Freshly squeezed orange juice.",
     price: 150,
-    image: "/images/veg-2.png",
-    isNew: true,
+    photo: "/images/veg-2.png",
+    
   },
   {
     id: 3,
     title: "Fresh Dried Almond (50g)",
     description: "High-quality dried almonds.",
     price: 200,
-    image: "/images/veg-3.png",
-    isNew: true,
+    photo: "/images/veg-3.png",
+    
   },
   {
     id: 4,
     title: "Shrimp - Jumbo (5 lb)",
     description: "Fresh jumbo shrimps.",
     price: 230,
-    image: "/images/veg-4.png",
-    isNew: true,
+    photo: "/images/veg-4.png",
+    
   },
   {
     id: 5,
     title: "Sp. Red Fresh Guava",
     description: "Sweet and juicy guavas.",
     price: 42,
-    image: "/images/veg-6.png",
-    isNew: true,
+    photo: "/images/veg-6.png",
+    
   },
   {
     id: 1,
     title: "Fresh Organic Fruit (50gm)",
     description: "Delicious organic fruit packed with nutrients.",
     price: 150,
-    image: "/images/veg-1.png", // Replace with your own images
-    isNew: true,
+    photo: "/images/veg-1.png", // Replace with your own images
+    
   },
   {
     id: 2,
     title: "Orange Juice (5ltr)",
     description: "Freshly squeezed orange juice.",
     price: 150,
-    image: "/images/veg-2.png",
-    isNew: true,
+    photo: "/images/veg-2.png",
+    
   },
   {
     id: 3,
     title: "Fresh Dried Almond (50g)",
     description: "High-quality dried almonds.",
     price: 200,
-    image: "/images/veg-3.png",
-    isNew: true,
+    photo: "/images/veg-3.png",
+    
   },
   {
     id: 4,
     title: "Shrimp - Jumbo (5 lb)",
     description: "Fresh jumbo shrimps.",
     price: 230,
-    image: "/images/veg-4.png",
-    isNew: true,
+    photo: "/images/veg-4.png",
+    
   },
   {
     id: 5,
     title: "Sp. Red Fresh Guava",
     description: "Sweet and juicy guavas.",
     price: 42,
-    image: "/images/veg-6.png",
-    isNew: true,
+    photo: "/images/veg-6.png",
+    
   },
   {
     id: 1,
     title: "Fresh Organic Fruit (50gm)",
     description: "Delicious organic fruit packed with nutrients.",
     price: 150,
-    image: "/images/veg-1.png", // Replace with your own images
-    isNew: true,
+    photo: "/images/veg-1.png", // Replace with your own images
+    
   },
   {
     id: 2,
     title: "Orange Juice (5ltr)",
     description: "Freshly squeezed orange juice.",
     price: 150,
-    image: "/images/veg-2.png",
-    isNew: true,
+    photo: "/images/veg-2.png",
+    
   },
   {
     id: 3,
     title: "Fresh Dried Almond (50g)",
     description: "High-quality dried almonds.",
     price: 200,
-    image: "/images/veg-3.png",
-    isNew: true,
+    photo: "/images/veg-3.png",
+    
   },
   {
     id: 4,
     title: "Shrimp - Jumbo (5 lb)",
     description: "Fresh jumbo shrimps.",
     price: 230,
-    image: "/images/veg-4.png",
-    isNew: true,
+    photo: "/images/veg-4.png",
+    
   },
   {
     id: 5,
     title: "Sp. Red Fresh Guava",
     description: "Sweet and juicy guavas.",
     price: 42,
-    image: "/images/veg-6.png",
-    isNew: true,
+    photo: "/images/veg-6.png",
+    
   },
   {
     id: 4,
     title: "Shrimp - Jumbo (5 lb)",
     description: "Fresh jumbo shrimps.",
     price: 230,
-    image: "/images/veg-4.png",
-    isNew: true,
+    photo: "/images/veg-4.png",
+    
   },
   {
     id: 5,
     title: "Sp. Red Fresh Guava",
     description: "Sweet and juicy guavas.",
     price: 42,
-    image: "/images/veg-6.png",
-    isNew: true,
+    photo: "/images/veg-6.png",
+    
   },
   {
     id: 1,
     title: "Fresh Organic Fruit (50gm)",
     description: "Delicious organic fruit packed with nutrients.",
     price: 150,
-    image: "/images/veg-1.png", // Replace with your own images
-    isNew: true,
+    photo: "/images/veg-1.png", // Replace with your own images
+    
   },
   {
     id: 2,
     title: "Orange Juice (5ltr)",
     description: "Freshly squeezed orange juice.",
     price: 150,
-    image: "/images/veg-2.png",
-    isNew: true,
+    photo: "/images/veg-2.png",
+    
   },
   {
     id: 4,
     title: "Shrimp - Jumbo (5 lb)",
     description: "Fresh jumbo shrimps.",
     price: 230,
-    image: "/images/veg-4.png",
-    isNew: true,
+    photo: "/images/veg-4.png",
+    
   },
   {
     id: 5,
     title: "Sp. Red Fresh Guava",
     description: "Sweet and juicy guavas.",
     price: 42,
-    image: "/images/veg-6.png",
-    isNew: true,
+    photo: "/images/veg-6.png",
+    
   },
   {
     id: 1,
     title: "Fresh Organic Fruit (50gm)",
     description: "Delicious organic fruit packed with nutrients.",
     price: 150,
-    image: "/images/veg-1.png", // Replace with your own images
-    isNew: true,
+    photo: "/images/veg-1.png", // Replace with your own images
+    
   },
   {
     id: 2,
     title: "Orange Juice (5ltr)",
     description: "Freshly squeezed orange juice.",
     price: 150,
-    image: "/images/veg-2.png",
-    isNew: true,
+    photo: "/images/veg-2.png",
+    
   },
 ];
 
@@ -213,15 +213,15 @@ const Products = () => {
             {/* Image Section */}
             <div className="relative h-56">
               <img
-                src={product.image}
+                src={product.photo}
                 alt={product.title}
                 className="h-full w-full object-contain"
               />
-              {product.isNew && (
+              
                 <span className="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
                   New
                 </span>
-              )}
+            
             </div>
             {/* Content Section */}
             <div className="p-4 space-y-2">

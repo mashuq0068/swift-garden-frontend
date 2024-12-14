@@ -17,7 +17,7 @@ const productApi = baseApi.injectEndpoints({
         return {
           url: "/products",
           method: "GET",
-          params: searchTerm,
+          // params: searchTerm,
         };
       },
       providesTags: ["product"],
@@ -51,6 +51,7 @@ const productApi = baseApi.injectEndpoints({
     }),
   }),
 });
+
 export const {
   useGetProductsQuery,
   useGetSingleProductQuery,

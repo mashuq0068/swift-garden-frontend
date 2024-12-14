@@ -1,11 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface IUser {
+  id : string | null;
   name: string | null;
   email: string | null;
   role: string | null;
+ 
 }
 const initialState: IUser = {
+  id : null,
   name: null,
   email: null,
   role: null,
@@ -21,6 +24,7 @@ const authSlice = createSlice({
         state.name = null;
         state.email = null
         state.role = null
+        state.id = null
     }
   },
 });
