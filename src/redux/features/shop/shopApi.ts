@@ -34,7 +34,7 @@ const shopApi = baseApi.injectEndpoints({
         return {
           url: `/shops/${data?.id}`,
           method: "PUT",
-          body: data?.shop,
+          body: data
         };
       },
       invalidatesTags: ["shop"],

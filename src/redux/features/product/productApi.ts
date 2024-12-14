@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import baseApi from "../../api/baseApi";
 
 const productApi = baseApi.injectEndpoints({
@@ -13,11 +14,11 @@ const productApi = baseApi.injectEndpoints({
       invalidatesTags: ["product"],
     }),
     getProducts: builder.query({
-      query: (searchTerm) => {
+      query: (params) => {
         return {
           url: "/products",
           method: "GET",
-          // params: searchTerm,
+          params:params,
         };
       },
       providesTags: ["product"],
@@ -35,7 +36,7 @@ const productApi = baseApi.injectEndpoints({
         return {
           url: `/products/${data?.id}`,
           method: "PUT",
-          body: data?.product,
+          body: data,
         };
       },
       invalidatesTags: ["product"],

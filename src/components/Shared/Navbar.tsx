@@ -1,7 +1,6 @@
 "use client";
 import { useDispatch, useSelector } from "react-redux";
 
-
 import { FiShoppingCart } from "react-icons/fi";
 import {
   FaTachometerAlt,
@@ -13,12 +12,16 @@ import {
 import { AiOutlineUser } from "react-icons/ai";
 import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { RiMenu2Line } from "react-icons/ri";
 import { usePathname } from "next/navigation";
 import Logo from "../Home/Logo";
-import { useAppSelector } from "@/redux/hooks";
-import { toggleCategory, updatePriceRange } from "@/redux/features/filter/filterSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import {
+  toggleCategory,
+  updatePriceRange,
+} from "@/redux/features/filter/filterSlice";
+import { setSearchTerm } from "@/redux/features/search/searchSlice";
 
 const categories = [
   { id: 1, name: "Leafy Greens" },
@@ -31,8 +34,8 @@ const categories = [
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useAppDispatch();
   const pathName = usePathname();
-  const dispatch = useDispatch();
 
   // Select filters from Redux
   const filters = useAppSelector((state) => state.filter);
@@ -46,12 +49,11 @@ const Navbar = () => {
     const { name, value } = e.target;
     dispatch(
       updatePriceRange({
-        ...filters.priceRange, 
-        [name]: value,       
+        ...filters.priceRange,
+        [name]: value,
       })
     );
   };
-  
 
   const isFilterActive =
     filters.priceRange.min !== "" &&
@@ -63,7 +65,11 @@ const Navbar = () => {
       console.log("Filtering with range:", filters.priceRange);
     }
   };
-
+  const handleSearchSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const searchTerm = (e.target as HTMLFormElement).search.value;
+    dispatch(setSearchTerm(searchTerm));
+  };
   const isAdminOrVendorPath =
     pathName.includes("/admin") || pathName.includes("/vendor");
 
@@ -80,16 +86,20 @@ const Navbar = () => {
           </div>
 
           {/* Search Bar */}
-          <div className="hidden lg:flex items-center justify-center flex-1">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="hidden lg:flex items-center justify-center flex-1"
+          >
             <input
               type="text"
+              name="search"
               placeholder="Search products..."
               className="w-[70%] border border-gray-300 rounded-l-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             <button className="bg-green-500 border-green-500 text-white px-4 py-2 rounded-r-md hover:bg-green-500">
               Search
             </button>
-          </div>
+          </form>
 
           {/* Icons */}
           <div className="flex items-center space-x-4">

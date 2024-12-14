@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -6,6 +7,7 @@ import "swiper/css/navigation";
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
 import { useEffect } from "react";
 import Aos from "aos";
+import { useGetCategoriesQuery } from "@/redux/features/category/category.api";
 
 const categories = [
   {
@@ -47,6 +49,7 @@ const categories = [
 ];
 
 const Category = () => {
+  const {data} = useGetCategoriesQuery(undefined)
   useEffect(() => {
     Aos.init({
       duration: 1000,
@@ -75,7 +78,7 @@ const Category = () => {
           loop={true}
           className="category-swiper mx-auto"
         >
-          {categories.map((category) => (
+          {data?.data?.map((category: any) => (
             <SwiperSlide key={category.id}>
               <div
                 data-aos="fade-up"

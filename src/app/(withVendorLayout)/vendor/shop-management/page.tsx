@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useState, FormEvent, DragEvent, ChangeEvent } from "react";
+import React, { useState, FormEvent } from "react";
 import { FiEdit } from "react-icons/fi"; // Edit Icon
 import SectionHeader from "@/components/Shared/SectionHeader";
 import {
@@ -10,46 +10,31 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"; // Import dialog components
-import { useAddShopMutation } from "@/redux/features/follower/followerApi";
+import {
+  useAddShopMutation,
+  useGetSingleShopQuery,
+  useUpdateSingleShopMutation,
+} from "@/redux/features/follower/followerApi";
 import toast from "react-hot-toast";
 import { useAppSelector } from "@/redux/hooks";
-
-interface Shop {
-  name: string;
-  description: string;
-  logo: string;
-  userId: string;
-}
-
-interface ShopData {
-  exists: boolean;
-  shop?: Shop;
-}
-
-const initialShopData: ShopData = {
-  exists: false,
-  shop: {
-    name: "Green Veggies Store",
-    description:
-      "Welcome to Green Veggies Store! We provide fresh vegetables, leafy greens, and other healthy options for your family. Shop with us for freshness and quality.",
-    logo: "https://via.placeholder.com/150",
-    //  // Placeholder for shop logo
-    userId: "1",
-  },
-};
+import { useUploadFileMutation } from "@/redux/features/upload/uploadApi";
 
 const ShopPage: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [shopId] = useState(localStorage.getItem("shop"));
   const [addShop] = useAddShopMutation();
+  const [cloudinaryUrl, setCloudinaryUrl] = useState("");
+  const [uploadPhoto] = useUploadFileMutation();
   const auth = useAppSelector((state) => state.auth);
-  console.log(auth);
-  const [shopData, setShopData] = useState<ShopData>(initialShopData);
+  const { data , refetch } = useGetSingleShopQuery(shopId);
   const [selectedFile, setSelectedFile] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [editShop] = useUpdateSingleShopMutation();
   const [formValues, setFormValues] = useState({
     name: "",
     description: "",
   });
+  console.log(formValues.name);
 
   const handleEditSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -67,9 +52,20 @@ const ShopPage: React.FC = () => {
   };
 
   // handle image change
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     setSelectedFile(file);
+    if (file && isEditing) {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const res = await uploadPhoto(formData).unwrap();
+        setCloudinaryUrl(res?.data?.photo);
+      } catch (error) {
+        console.error("File upload failed:", error);
+      }
+    }
     if (file) {
       setSelectedImage(URL.createObjectURL(file)); // Create Blob URL for the selected file
     }
@@ -100,6 +96,42 @@ const ShopPage: React.FC = () => {
       toast.error("Failed to create the shop.");
     }
   };
+  const handleEditShop = async () => {
+    const shopData = {
+      name: formValues.name || data?.data?.name,
+      description: formValues.description || data?.data?.description,
+      logo: cloudinaryUrl || data?.data?.logo,
+    };
+
+    console.log("shop data =>", shopData);
+
+    try {
+      const res = await fetch(`http://localhost:5000/api/shops/${shopId}`, {
+        method: "PUT", 
+        headers: {
+          "Content-Type": "application/json", 
+        },
+        body: JSON.stringify(shopData), 
+      });
+
+      // Handle response
+      if (res.ok) {
+        const data = await res.json(); 
+        console.log("Shop updated successfully:", data);
+        toast.success("Shop updated successfully!");
+        refetch()
+        setIsEditing(false); 
+      } else {
+      
+        // const errorData = await res.json();
+        // console.log("Error updating shop:", errorData);
+        toast.error("Failed to update shop.");
+      }
+    } catch (error) {
+      // console.log("Error updating shop:", error);
+      toast.error("Failed to update shop.");
+    }
+  };
 
   const PhotoUploader = () => {
     return (
@@ -128,6 +160,12 @@ const ShopPage: React.FC = () => {
                   alt="Selected"
                   className="h-48 w-auto mx-auto rounded"
                 />
+              ) : isEditing ? (
+                <img
+                  src={cloudinaryUrl || data?.data?.logo}
+                  alt="Selected"
+                  className="h-48 w-auto mx-auto rounded"
+                />
               ) : (
                 <svg
                   className="mx-auto h-12 w-12 text-gray-400"
@@ -150,6 +188,7 @@ const ShopPage: React.FC = () => {
                   />
                 </svg>
               )}
+              {}
               <div className="flex text-sm text-gray-600">
                 <span className="bg-white rounded-md font-medium text-primary hover:text-primary-dark">
                   Upload logo
@@ -172,7 +211,7 @@ const ShopPage: React.FC = () => {
           <SectionHeader title="My Shop" />
           <div className="shop-dashboard wrapper relative">
             <h2 className="text-lg flex justify-between font-medium items-center">
-              {shopData.shop.name}
+              {data?.data?.name}
               <button
                 onClick={() => setIsEditing(true)}
                 className="ml-2 p-1 rounded-full hover:bg-gray-200"
@@ -181,13 +220,11 @@ const ShopPage: React.FC = () => {
               </button>
             </h2>
             <img
-              src={shopData.shop.logo}
+              src={data?.data?.logo}
               alt="Shop Logo"
-              className="w-36 h-36 rounded-full my-4"
+              className="w-36 h-36 rounded-full object-cover my-4"
             />
-            <p className="text-gray-600 text-base">
-              {shopData.shop.description}
-            </p>
+            <p className="text-gray-600 text-base">{data?.data?.description}</p>
           </div>
         </>
       ) : (
@@ -247,6 +284,7 @@ const ShopPage: React.FC = () => {
                 <input
                   id="edit-name"
                   type="text"
+                  defaultValue={data?.data?.name}
                   name="name"
                   onChange={handleInputChange}
                   className="form-input"
@@ -259,6 +297,7 @@ const ShopPage: React.FC = () => {
                 </label>
                 <textarea
                   id="edit-description"
+                  defaultValue={data?.data?.description}
                   name="description"
                   onChange={handleInputChange}
                   className="form-input"
@@ -267,7 +306,11 @@ const ShopPage: React.FC = () => {
               </div>
               <PhotoUploader />
               <DialogFooter>
-                <button type="submit" className="btn-primary bg-green-500">
+                <button
+                  onClick={handleEditShop}
+                  type="submit"
+                  className="btn-primary bg-green-500"
+                >
                   Save Changes
                 </button>
               </DialogFooter>

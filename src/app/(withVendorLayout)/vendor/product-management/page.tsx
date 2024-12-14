@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import {
   Table,
   TableBody,
@@ -40,9 +40,8 @@ import {
   useDeleteSingleProductMutation,
 } from "@/redux/features/product/productApi";
 import toast from "react-hot-toast";
-import Placeholder from "@/helpers/placeholder";
 import { useGetCategoriesQuery } from "@/redux/features/category/category.api";
-import { json } from "stream/consumers";
+import { useUploadFileMutation } from "@/redux/features/upload/uploadApi";
 
 const initialFormState = {
   id: "",
@@ -56,20 +55,34 @@ const initialFormState = {
 const ProductManagement = () => {
   const { data } = useGetProductsQuery(undefined);
   const [addProduct] = useAddProductMutation();
+  const [uploadPhoto] = useUploadFileMutation();
   const [updateProduct] = useUpdateSingleProductMutation();
+  const [cloudinaryUrl, setCloudinaryUrl] = useState("");
   const [deleteProduct] = useDeleteSingleProductMutation();
   const { data: categoryData } = useGetCategoriesQuery(undefined);
-  const [productForm, setProductForm] = useState(initialFormState);
+  const [productForm, setProductForm] = useState<any>(initialFormState);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<any>(null);
-  console.log("isEditing = >",isEditing);
-  console.log(productForm.photo);
+  console.log("isEditing = >", isEditing);
+  console.log((productForm as { photo?: any }).photo);
+  console.log(productForm);
 
   // Handle image change
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     setSelectedFile(file);
+    if (file && isEditing) {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const res = await uploadPhoto(formData).unwrap();
+        setCloudinaryUrl(res?.data?.photo);
+      } catch (error) {
+        console.error("File upload failed:", error);
+      }
+    }
     if (file) {
       setSelectedImage(URL.createObjectURL(file));
     }
@@ -82,7 +95,7 @@ const ProductManagement = () => {
       return requiredFields.every((field) => productForm[field] !== "");
     };
 
-    if (!isAllFieldsFilled(productForm) || !selectedFile) {
+    if ((!isAllFieldsFilled(productForm) || !selectedFile) && !isEditing) {
       toast.error("All fields are required");
       return;
     }
@@ -100,20 +113,32 @@ const ProductManagement = () => {
 
       // Now send this FormData object to your API
       if (isEditing) {
-        await updateProduct({ id: productForm.id, product: formData }).unwrap();
+        console.log("product form =>", productForm);
+        const data = {
+          ...productForm,
+          price: Number(productForm.price),
+          inventory: Number(productForm.inventory),
+          photo : cloudinaryUrl || productForm?.photo
+        };
+        await updateProduct(data).unwrap();
         toast.success("Product updated successfully");
+        setSelectedFile("");
       } else {
         const res = await addProduct(formData).unwrap();
         console.log(res?.data);
         toast.success("Product created successfully");
+        resetForm();
+        setSelectedFile("");
       }
-
-      resetForm();
     } catch (error) {
       console.error("Failed to save product:", error);
       toast.error("Failed to create product");
+      setSelectedFile("");
     }
   };
+  // const handleEdit  = (e:FormEvent<HTMLFormElement>) => {
+  //  e.preventDefault()
+  // }
 
   // Handle product deletion
   const handleDelete = async (id: string) => {
@@ -211,117 +236,131 @@ const ProductManagement = () => {
     <div>
       <SectionHeader title="Product Management" />
       <div className="wrapper">
-        <div className="flex justify-between items-end gap-3 flex-wrap mb-6">
-          <h2 className="font-medium">All Products</h2>
-          <Dialog>
-            <DialogTrigger asChild>
-              <button
-                onClick={openCreateDialog}
-                className="btn-primary mb-3 bg-green-500"
-              >
-                <TbPlus className="mr-2" />
-                Create New Product
-              </button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  {isEditing ? "Edit Product" : "Create New Product"}
-                </DialogTitle>
-                <DialogDescription>
-                  <form className="space-y-3">
-                    <PhotoUploader />
-                    <div>
-                      <label className="form-label">Product Name</label>
-                      <input
-                        type="text"
-                        value={productForm.name}
-                        onChange={(e) =>
-                          setProductForm({
-                            ...productForm,
-                            name: e.target.value,
-                          })
-                        }
-                        className="form-input"
-                      />
-                    </div>
-                    <div>
-                      <label className="form-label">Price</label>
-                      <input
-                        type="number"
-                        value={productForm.price}
-                        onChange={(e) =>
-                          setProductForm({
-                            ...productForm,
-                            price: e.target.value,
-                          })
-                        }
-                        className="form-input"
-                      />
-                    </div>
-                    <div>
-                      <label className="form-label">Quantity</label>
-                      <input
-                        type="number"
-                        value={productForm.inventory}
-                        onChange={(e) =>
-                          setProductForm({
-                            ...productForm,
-                            inventory: e.target.value,
-                          })
-                        }
-                        className="form-input"
-                      />
-                    </div>
-                    <div>
-                      <label className="form-label">Category</label>
-                      <select
-                        value={productForm.categoryId}
-                        onChange={(e) =>
-                          setProductForm({
-                            ...productForm,
-                            categoryId: e.target.value,
-                          })
-                        }
-                        className="form-input"
-                      >
-                        <option value="">Select a category</option>
-                        {categoryData?.data?.map((category: any) => (
-                          <option key={category.id} value={category.id}>
-                            {category.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    {/* Description Field */}
-                    <div>
-                      <label className="form-label">Description</label>
-                      <textarea
-                        value={productForm.description}
-                        onChange={(e) =>
-                          setProductForm({
-                            ...productForm,
-                            description: e.target.value,
-                          })
-                        }
-                        className="form-input"
-                        rows={4}
-                      />
-                    </div>
-                  </form>
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <button
-                  onClick={handleSubmit}
-                  type="submit"
-                  className="btn-primary bg-green-500"
-                >
-                  {isEditing ? "Update Product" : "Create Product"}
-                </button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+        <div className="flex justify-between items-end gap-3 flex-wrap">
+          <div className="w-full mb-6">
+            <div className="flex justify-between items-end gap-3 flex-wrap">
+              <h2 className="text-base flex justify-between  flex-col font-medium mb-2">
+                All Products
+              </h2>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button
+                    onClick={openCreateDialog}
+                    className="btn-primary mb-3 bg-green-500"
+                  >
+                    <TbPlus className="mr-2" />
+                    Create New Product
+                  </button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>
+                      {isEditing ? "Edit Product" : "Create New Product"}
+                    </DialogTitle>
+                    <DialogDescription>
+                      <form className="space-y-3">
+                        <PhotoUploader />
+                        <div>
+                          <label className="form-label">Product Name</label>
+                          <input
+                            type="text"
+                            value={productForm.name}
+                            onChange={(e) =>
+                              setProductForm({
+                                ...productForm,
+                                name: e.target.value,
+                              })
+                            }
+                            className="form-input"
+                            name="name"
+                          />
+                        </div>
+                        <div>
+                          <label className="form-label">Price</label>
+                          <input
+                            type="number"
+                            value={productForm.price}
+                            onChange={(e) =>
+                              setProductForm({
+                                ...productForm,
+                                price: e.target.value,
+                              })
+                            }
+                            className="form-input"
+                            name="price"
+                          />
+                        </div>
+                        <div>
+                          <label className="form-label">Quantity</label>
+                          <input
+                            type="number"
+                            value={productForm.inventory}
+                            onChange={(e) =>
+                              setProductForm({
+                                ...productForm,
+                                inventory: e.target.value,
+                              })
+                            }
+                            className="form-input"
+                            name="inventory"
+                          />
+                        </div>
+                        <div>
+                          <label className="form-label">Category</label>
+                          <select
+                            value={productForm.categoryId}
+                            onChange={(e) =>
+                              setProductForm({
+                                ...productForm,
+                                categoryId: e.target.value,
+                              })
+                            }
+                            className="form-input"
+                            name="category"
+                          >
+                            <option value="">Select a category</option>
+                            {categoryData?.data?.map((category: any) => (
+                              <option key={category.id} value={category.id}>
+                                {category.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        {/* Description Field */}
+                        <div>
+                          <label className="form-label">Description</label>
+                          <textarea
+                            value={productForm.description}
+                            onChange={(e) =>
+                              setProductForm({
+                                ...productForm,
+                                description: e.target.value,
+                              })
+                            }
+                            className="form-input"
+                            rows={4}
+                            name="description"
+                          />
+                        </div>
+                      </form>
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <button
+                      onClick={handleSubmit}
+                      type="submit"
+                      className="btn-primary bg-green-500"
+                    >
+                      {isEditing ? "Update Product" : "Create Product"}
+                    </button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
+            <div className="h-[2px] bg-gray-200">
+              <div className="h-[2px] bg-green-500 w-[120px]"></div>
+            </div>
+          </div>
         </div>
         <Table>
           <TableHeader>
@@ -441,8 +480,8 @@ const ProductManagement = () => {
                         </DialogHeader>
                         <DialogFooter>
                           <button
+                            onClick={handleSubmit}
                             type="submit"
-                            onSubmit={handleSubmit}
                             className="btn-primary bg-green-500"
                           >
                             {isEditing ? "Update Product" : "Create Product"}
