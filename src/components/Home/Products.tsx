@@ -1,41 +1,70 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { useCreateRecentProductMutation } from "@/redux/features/recentProducts/recentProductsApi";
 import { useAppSelector } from "@/redux/hooks";
 import useLoadingStore from "@/store/loadingStore";
 import Aos from "aos";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Products = () => {
   const search = useAppSelector((state) => state.search);
-  console.log(search);
+  const [addToRecentProduct] = useCreateRecentProductMutation();
+  const auth = useAppSelector((state) => state.auth);
+  const router = useRouter();
+  const filter = useAppSelector((state) => state.filter);
+  console.log(filter);
   const [products, setProducts] = useState([]);
   const { setLoading } = useLoadingStore();
   const fetchProducts = async () => {
     setLoading(true);
 
     try {
+      const filterParams = new URLSearchParams();
+
+      // Add search term
+      if (search.searchTerm) {
+        filterParams.append("search", search.searchTerm);
+      }
+
+      // Add categories
+      if (filter.categories.length > 0) {
+        filter.categories.forEach((category) => {
+          filterParams.append("filters[categories][]", category.toString());
+        });
+      }
+
+      // Add price range
+      const { min, max } = filter.priceRange;
+      if (min) {
+        filterParams.append("filters[minPrice]", min.toString());
+      }
+      if (max) {
+        filterParams.append("filters[maxPrice]", max.toString());
+      }
+
+      // Fetch products with the constructed query string
       const response = await fetch(
-        `http://localhost:5000/api/products?search=${search.searchTerm}`
+        `http://localhost:5000/api/products?${filterParams.toString()}`
       );
-      
+
       if (!response.ok) {
         throw new Error("Failed to fetch products");
       }
 
       const data = await response.json();
-      console.log(data);
       setProducts(data?.data); // Update products state with the fetched data
     } catch (err: any) {
       console.log(err?.message);
-      setLoading(false);
     } finally {
       setLoading(false); // Set loading to false after request completes
     }
   };
+
   useEffect(() => {
     fetchProducts();
-  }, [search.searchTerm]);
+  }, [search.searchTerm, filter.categories, filter.priceRange]);
 
   // Static product data
   useEffect(() => {
@@ -44,6 +73,14 @@ const Products = () => {
     });
   }, []);
 
+  const handleProductClick = async (id: string) => {
+    try {
+      await addToRecentProduct({ productId: id, userId: auth.id });
+      router.push(`/products/${id}`);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className="min-h-screen mt-14 ">
       {/* <h1 className="text-center text-4xl mb-12 font-bold text-gray-800">
@@ -53,9 +90,10 @@ const Products = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {products?.map((product: any, i: number) => (
             <div
+              onClick={() => handleProductClick(product.id)}
               data-aos="fade-right"
               key={i}
-              className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
+              className="bg-white cursor-pointer rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
             >
               {/* Image Section */}
               <div className="relative h-56">

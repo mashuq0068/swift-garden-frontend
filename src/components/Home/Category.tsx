@@ -8,48 +8,43 @@ import { Pagination, Navigation, Autoplay } from "swiper/modules";
 import { useEffect } from "react";
 import Aos from "aos";
 import { useGetCategoriesQuery } from "@/redux/features/category/category.api";
+import Link from "next/link";
 
-const categories = [
-  {
-    id: 1,
-    name: "Leafy Greens",
-    image: "/images/veg-1.png", 
-   
-  },
-  {
-    id: 2,
-    name: "Root Vegetables",
-    image: "/images/veg-2.png", 
-   
-  },
-  {
-    id: 3,
-    name: "Cruciferous",
-    image: "/images/veg-3.png", 
-   
-  },
-  {
-    id: 4,
-    name: "Gourds & Squashes",
-    image: "/images/veg-4.png", 
-  
-  },
-  {
-    id: 5,
-    name: "Allium Vegetables",
-    image: "/images/veg-5.png", 
-  
-  },
-  {
-    id: 6,
-    name: "Nightshades",
-    image: "/images/veg-6.png", 
-   
-  },
-];
+// const categories = [
+//   {
+//     id: 1,
+//     name: "Leafy Greens",
+//     image: "/images/veg-1.png",
+//   },
+//   {
+//     id: 2,
+//     name: "Root Vegetables",
+//     image: "/images/veg-2.png",
+//   },
+//   {
+//     id: 3,
+//     name: "Cruciferous",
+//     image: "/images/veg-3.png",
+//   },
+//   {
+//     id: 4,
+//     name: "Gourds & Squashes",
+//     image: "/images/veg-4.png",
+//   },
+//   {
+//     id: 5,
+//     name: "Allium Vegetables",
+//     image: "/images/veg-5.png",
+//   },
+//   {
+//     id: 6,
+//     name: "Nightshades",
+//     image: "/images/veg-6.png",
+//   },
+// ];
 
 const Category = () => {
-  const {data} = useGetCategoriesQuery(undefined)
+  const { data } = useGetCategoriesQuery(undefined);
   useEffect(() => {
     Aos.init({
       duration: 1000,
@@ -100,9 +95,12 @@ const Category = () => {
                   {category.name}
                 </h3>
                 {/* Subtext or Button */}
-                <button className="mt-2  bg-green-500 text-white py-1 px-4 rounded-lg hover:bg-green-500 transition">
-                Explore
-              </button>
+                <Link
+                  href={`/categories/${category.id}`}
+                  className="mt-2  bg-green-500 text-white py-1 px-4 rounded-lg hover:bg-green-500 transition"
+                >
+                  Explore
+                </Link>
               </div>
             </SwiperSlide>
           ))}

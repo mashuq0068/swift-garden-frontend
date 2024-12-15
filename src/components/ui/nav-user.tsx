@@ -27,7 +27,7 @@ import Link from "next/link"
 
 
 export function NavUser({
-  user,
+
 }: {
   user: {
     name: string

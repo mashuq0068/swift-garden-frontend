@@ -13,7 +13,7 @@ import {
 import {
   useAddShopMutation,
   useGetSingleShopQuery,
-  useUpdateSingleShopMutation,
+
 } from "@/redux/features/follower/followerApi";
 import toast from "react-hot-toast";
 import { useAppSelector } from "@/redux/hooks";
@@ -29,7 +29,7 @@ const ShopPage: React.FC = () => {
   const { data , refetch } = useGetSingleShopQuery(shopId);
   const [selectedFile, setSelectedFile] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [editShop] = useUpdateSingleShopMutation();
+
   const [formValues, setFormValues] = useState({
     name: "",
     description: "",
@@ -129,7 +129,7 @@ const ShopPage: React.FC = () => {
       }
     } catch (error) {
       // console.log("Error updating shop:", error);
-      toast.error("Failed to update shop.");
+      console.error(error);
     }
   };
 

@@ -12,7 +12,7 @@ import SectionHeader from "@/components/Shared/SectionHeader";
 
 const OrderHistory = () => {
   // Mock data for orders (can be replaced with fetched data)
-  const [orders, setOrders] = useState([
+  const [orders] = useState([
     {
       id: "1",
       shop: { name: "Green Farm" },

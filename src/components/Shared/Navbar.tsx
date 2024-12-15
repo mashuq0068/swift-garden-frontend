@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useDispatch, useSelector } from "react-redux";
 
-import { FiShoppingCart } from "react-icons/fi";
+import { useState } from "react";
+import {  PiShoppingCartLight } from "react-icons/pi";
 import {
   FaTachometerAlt,
   FaStore,
@@ -10,10 +11,10 @@ import {
   FaHistory,
 } from "react-icons/fa";
 import { AiOutlineUser } from "react-icons/ai";
+import { RiMenu2Line } from "react-icons/ri";
 import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
-import { FormEvent, useState } from "react";
-import { RiMenu2Line } from "react-icons/ri";
+import { FormEvent } from "react";
 import { usePathname } from "next/navigation";
 import Logo from "../Home/Logo";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -22,54 +23,61 @@ import {
   updatePriceRange,
 } from "@/redux/features/filter/filterSlice";
 import { setSearchTerm } from "@/redux/features/search/searchSlice";
-
-const categories = [
-  { id: 1, name: "Leafy Greens" },
-  { id: 2, name: "Root Vegetables" },
-  { id: 3, name: "Cruciferous" },
-  { id: 4, name: "Gourds & Squashes" },
-  { id: 5, name: "Allium Vegetables" },
-  { id: 6, name: "Nightshades" },
-];
+import { useGetCategoriesQuery } from "@/redux/features/category/category.api";
+import Link from "next/link";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const cart = useAppSelector((state) => state.cart);
+  const { data } = useGetCategoriesQuery(undefined);
   const dispatch = useAppDispatch();
   const pathName = usePathname();
 
-  // Select filters from Redux
+  // Redux filter and local state for price range
   const filters = useAppSelector((state) => state.filter);
+  const [localPriceRange, setLocalPriceRange] = useState({
+    min: filters.priceRange.min || "",
+    max: filters.priceRange.max || "",
+  });
 
+  // Toggle drawer visibility
   const toggleDrawer = () => setIsOpen(!isOpen);
 
+  // Handle category change
   const handleCategoryChange = (id: number) => {
     dispatch(toggleCategory(id));
   };
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  // Update local state for price range
+  const handlePriceInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    dispatch(
-      updatePriceRange({
-        ...filters.priceRange,
-        [name]: value,
-      })
-    );
+    setLocalPriceRange((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
+  // Determine if the price filter can be applied
   const isFilterActive =
-    filters.priceRange.min !== "" &&
-    filters.priceRange.max !== "" &&
-    Number(filters.priceRange.min) <= Number(filters.priceRange.max);
+    localPriceRange.min !== "" &&
+    localPriceRange.max !== "" &&
+    Number(localPriceRange.min) <= Number(localPriceRange.max);
 
+  // Apply the price filter (dispatch to Redux store)
   const handleApplyFilter = () => {
     if (isFilterActive) {
-      console.log("Filtering with range:", filters.priceRange);
+      dispatch(updatePriceRange(localPriceRange));
+      console.log("Filtering with range:", localPriceRange);
     }
   };
+
+  // Search submission handler
   const handleSearchSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const searchTerm = (e.target as HTMLFormElement).search.value;
     dispatch(setSearchTerm(searchTerm));
   };
+
   const isAdminOrVendorPath =
     pathName.includes("/admin") || pathName.includes("/vendor");
 
@@ -77,12 +85,15 @@ const Navbar = () => {
     <div className={`${isAdminOrVendorPath ? "hidden" : "block"}`}>
       <div className="py-6 px-4 container mx-auto sticky top-0 z-50">
         <div className="flex flex-wrap justify-between items-center container mx-auto">
-          {/* Logo , drawer */}
+          {/* Logo and drawer toggle */}
           <div className="flex items-center gap-5">
             <button onClick={toggleDrawer}>
               <RiMenu2Line className="text-xl" />
             </button>
-            <Logo />
+            <Link href="/">
+              {" "}
+              <Logo />
+            </Link>
           </div>
 
           {/* Search Bar */}
@@ -103,7 +114,17 @@ const Navbar = () => {
 
           {/* Icons */}
           <div className="flex items-center space-x-4">
-            <FiShoppingCart className="text-2xl text-gray-700 hover:text-green-500 transition" />
+            <Link href="/cart" className="relative">
+              <PiShoppingCartLight className="text-3xl text-gray-700 hover:text-green-500 transition" />
+
+              {/* Cart Item Count Badge */}
+              {cart.items.length > 0 && (
+                <span className="absolute -top-2 -right-3 flex items-center justify-center w-5 h-5 bg-red-500 text-white text-xs font-semibold rounded-full">
+                  {cart.items.length}
+                </span>
+              )}
+            </Link>
+
             <AiOutlineUser className="text-2xl text-gray-700 hover:text-green-500 transition" />
           </div>
         </div>
@@ -131,32 +152,32 @@ const Navbar = () => {
         <div className="p-4">
           <h2 className="text-xl font-semibold mb-4">Menu</h2>
           <ul className="space-y-3">
-            <li className="flex items-center space-x-2 cursor-pointer hover:text-green-500">
+            <Link href='/' className="flex items-center space-x-2 cursor-pointer hover:text-green-500">
               <FaTachometerAlt />
               <span>Dashboard</span>
-            </li>
-            <li className="flex items-center space-x-2 cursor-pointer hover:text-green-500">
+            </Link>
+            <Link href='/'  className="flex items-center space-x-2 cursor-pointer hover:text-green-500">
               <FaStore />
               <span>Shops</span>
-            </li>
-            <li className="flex items-center space-x-2 cursor-pointer hover:text-green-500">
+            </Link>
+            <Link href='/'  className="flex items-center space-x-2 cursor-pointer hover:text-green-500">
               <FaTags />
               <span>Flash Sales</span>
-            </li>
-            <li className="flex items-center space-x-2 cursor-pointer hover:text-green-500">
+            </Link>
+            <Link href='/recent-products'  className="flex items-center space-x-2 cursor-pointer hover:text-green-500">
               <FaEye />
               <span>Recently Viewed</span>
-            </li>
-            <li className="flex items-center space-x-2 cursor-pointer hover:text-green-500 mt-4">
+            </Link>
+            <Link href='/'  className="flex items-center space-x-2 cursor-pointer hover:text-green-500 mt-4">
               <FaHistory />
               <span>Order History</span>
-            </li>
+            </Link>
 
             {/* Filters */}
             <li className="pt-4">
               <div className="mb-6">
                 <h3 className="text-sm font-medium mb-2">Categories</h3>
-                {categories.map((category) => (
+                {data?.data?.map((category: any) => (
                   <label
                     key={category.id}
                     className="flex items-center mt-3 space-x-2 cursor-pointer"
@@ -178,8 +199,8 @@ const Navbar = () => {
                   <input
                     type="number"
                     name="min"
-                    value={filters.priceRange.min}
-                    onChange={handlePriceChange}
+                    value={localPriceRange.min}
+                    onChange={handlePriceInputChange}
                     placeholder="Min"
                     className="w-20 px-2 py-1 border rounded"
                   />
@@ -187,8 +208,8 @@ const Navbar = () => {
                   <input
                     type="number"
                     name="max"
-                    value={filters.priceRange.max}
-                    onChange={handlePriceChange}
+                    value={localPriceRange.max}
+                    onChange={handlePriceInputChange}
                     placeholder="Max"
                     className="w-20 px-2 py-1 border rounded"
                   />

@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface PriceRange {
-  min: number | string;
-  max: number | string;
+  min: string | number;
+  max: string | number;
 }
 
 interface FilterState {
@@ -16,7 +16,7 @@ const initialState: FilterState = {
 };
 
 const filterSlice = createSlice({
-  name: "filters",
+  name: "filter",
   initialState,
   reducers: {
     toggleCategory(state, action: PayloadAction<number>) {
@@ -28,15 +28,10 @@ const filterSlice = createSlice({
       }
     },
     updatePriceRange(state, action: PayloadAction<PriceRange>) {
-      state.priceRange = { ...state.priceRange, ...action.payload };
-    },
-    resetFilters(state) {
-      state.categories = [];
-      state.priceRange = { min: "", max: "" };
+      state.priceRange = action.payload;
     },
   },
 });
 
-export const { toggleCategory, updatePriceRange, resetFilters } = filterSlice.actions;
-
+export const { toggleCategory, updatePriceRange } = filterSlice.actions;
 export default filterSlice.reducer;

@@ -1,67 +1,28 @@
 "use client";
-
-import React, { useState } from "react";
-import { useAppDispatch } from "@/redux/hooks";
+import React from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   removeItem,
   updateQuantity,
   clearCart,
 } from "@/redux/features/cart/cartSlice";
-import { FiDelete } from "react-icons/fi";
+
 
 const CartPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const [selectedDelivery, setSelectedDelivery] = useState<string>("dpd");
-  const [selectedServices, setSelectedServices] = useState<
-    Record<string, boolean>
-  >({
-    carePackage: false,
-    environmentFriendly: false,
-    goldenGuard: false,
-  });
+  const cart = useAppSelector((state) => state.cart); // Get cart from Redux state
 
-  const handleServiceToggle = (service: string) => {
-    setSelectedServices((prev) => ({
-      ...prev,
-      [service]: !prev[service],
-    }));
-  };
 
   const handleQuantityChange = (id: number, quantity: number) => {
     if (quantity === 0) {
-      dispatch(removeItem(id));
+      dispatch(removeItem(id)); // Remove item if quantity is 0
     } else {
-      dispatch(updateQuantity({ id, quantity }));
+      dispatch(updateQuantity({ id, quantity })); // Update item quantity
     }
   };
 
-  const dummyData = [
-    {
-      id: 1,
-      name: "Tomato",
-      price: 2.5,
-      quantity: 3,
-      photo: "https://via.placeholder.com/150",
-    },
-    {
-      id: 2,
-      name: "Potato",
-      price: 1.5,
-      quantity: 5,
-      photo: "https://via.placeholder.com/150",
-    },
-    {
-      id: 3,
-      name: "Carrot",
-      price: 3,
-      quantity: 2,
-      photo: "https://via.placeholder.com/150",
-    },
-  ];
-
   return (
     <div className="bg-gray-50 min-h-screen">
-      {/* Main Content */}
       <div className="container mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Order Section */}
         <div className="lg:col-span-8 bg-white p-8 rounded-lg shadow-md">
@@ -69,12 +30,16 @@ const CartPage: React.FC = () => {
             <h2 className="text-2xl font-medium mb-6 text-gray-800">
               Your Order
             </h2>
-            <button onClick={() => dispatch(clearCart())} className="py-2 px-3 flex items-center gap-2 bg-red-500 h-max text-white rounded hover:bg-red-600">
-            <FiDelete />Clear Cart
+            <button
+              onClick={() => dispatch(clearCart())}
+              className=" bg-red-500 text-white btn-primary h-max rounded-lg hover:bg-red-600"
+            >
+              Clear Cart
             </button>
           </div>
+
           {/* Item List */}
-          {dummyData.map((item) => (
+          {cart.items.map((item) => (
             <div
               key={item.id}
               className="flex flex-col sm:flex-row items-center justify-between mb-6 p-4 bg-gray-100 rounded-lg shadow-sm transition-all space-y-4 sm:space-y-0"
@@ -118,11 +83,16 @@ const CartPage: React.FC = () => {
                     +
                   </button>
                 </div>
-
-                {/* Remove Button */}
               </div>
             </div>
           ))}
+          {cart?.items?.length === 0 && (
+            <div className=" flex mt-8 justify-center h-full">
+              <p className=" text-lg text-center  text-gray-500">
+                No Items added
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Payment Summary */}
@@ -135,28 +105,16 @@ const CartPage: React.FC = () => {
               <div className="flex justify-between">
                 <p className="text-gray-600">Total Items</p>
                 <p className="font-medium text-gray-900">
-                  {dummyData.reduce((total, item) => total + item.quantity, 0)}
+                  {cart.totalQuantity}
                 </p>
               </div>
               <div className="flex justify-between">
                 <p className="text-gray-600">Total Price</p>
-                <p className="font-medium text-gray-900">
-                  $
-                  {dummyData.reduce(
-                    (total, item) => total + item.price * item.quantity,
-                    0
-                  )}
-                </p>
+                <p className="font-medium text-gray-900">${cart.totalPrice}</p>
               </div>
               <div className="flex justify-between font-medium text-xl text-gray-900">
                 <p>Total Amount</p>
-                <p>
-                  $
-                  {dummyData.reduce(
-                    (total, item) => total + item.price * item.quantity,
-                    0
-                  )}
-                </p>
+                <p>${cart.totalPrice}</p>
               </div>
             </div>
             <button

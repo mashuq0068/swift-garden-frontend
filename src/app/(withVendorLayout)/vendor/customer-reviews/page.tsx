@@ -13,7 +13,7 @@ import ReactStarRatings from "react-star-ratings";
 
 const CustomerReviews = () => {
   // Mock data for reviews (can be replaced with fetched data)
-  const [reviews, setReviews] = useState([
+  const [reviews] = useState([
     {
       id: "1",
       user: { name: "John Doe" },

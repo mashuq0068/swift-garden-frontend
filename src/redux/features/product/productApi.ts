@@ -18,7 +18,7 @@ const productApi = baseApi.injectEndpoints({
         return {
           url: "/products",
           method: "GET",
-          params:params,
+          params: params,
         };
       },
       providesTags: ["product"],
