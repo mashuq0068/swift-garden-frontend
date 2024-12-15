@@ -3,18 +3,40 @@
 
 
 import { useGetSingleProductQuery } from "@/redux/features/product/productApi";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector} from "@/redux/hooks";
 import { addItem } from "@/redux/features/cart/cartSlice";
-import { useParams, } from "next/navigation";
+import toast from "react-hot-toast";
+import { useParams } from "next/navigation";
+
 
 
 const ProductPage = () => {
   const params = useParams();
+  const cart = useAppSelector((state) => state.cart)
+  console.log(cart);
+
   const dispatch = useAppDispatch();
   const { data } = useGetSingleProductQuery(params.id);
+  console.log(data?.data);
 
   const addToCart = (data: any) => {
+    if (!data || !data.shopId) return; // Ensure product and shopId exist
+console.log(cart);
+    // Check if there are items in the cart
+    if (cart.items.length > 0) {
+      // Verify if shopId matches existing shopId in the cart
+      const existingShopId = cart.items[0].shopId;
+      console.log("existed", existingShopId);
+      console.log("new",data?.shopId);
+      if (existingShopId !== data?.shopId) {
+        toast.error("You cannot add products from different shops to the cart.");
+        return; // Exit function without dispatching addItem
+      }
+    }
+
+    // Dispatch addItem if shopId matches or cart is empty
     dispatch(addItem(data));
+    toast.success("Product added to the cart.");
   };
 
   return (

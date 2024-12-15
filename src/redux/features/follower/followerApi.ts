@@ -1,110 +1,50 @@
 import baseApi from "../../api/baseApi";
 
-const shopApi = baseApi.injectEndpoints({
-  endpoints: (builder) => ({
-    addShop: builder.mutation({
-      query: (shop) => {
-        return {
-          url: "/shops",
-          method: "POST",
-          body: shop,
-        };
-      },
-      invalidatesTags: ["shop"],
-    }),
-    getShops: builder.query({
-      query: () => {
-        return {
-          url: "/shops",
-          method: "GET",
-        };
-      },
-      providesTags: ["shop"],
-    }),
-    getSingleShop: builder.query({
-      query: (id) => {
-        return {
-          url: `/shops/${id}`,
-          method: "GET",
-        };
-      },
-    }),
-    updateSingleShop: builder.mutation({
-      query: (data) => {
-        return {
-          url: `/shops/${data?.id}`,
-          method: "PUT",
-          body: data?.shop,
-        };
-      },
-      invalidatesTags: ["shop"],
-    }),
-    deleteSingleShop: builder.mutation({
-      query: (id) => {
-        return {
-          url: `/shops/${id}`,
-          method: "DELETE",
-        };
-      },
-      invalidatesTags: ["shop"],
-    }),
-  }),
-});
-
-export const {
-  useAddShopMutation,
-  useGetShopsQuery,
-  useGetSingleShopQuery,
-  useUpdateSingleShopMutation,
-  useDeleteSingleShopMutation,
-} = shopApi;
-
 const followerApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     addFollower: builder.mutation({
-      query: (follower) => {
-        return {
-          url: "/followers",
-          method: "POST",
-          body: follower,
-        };
-      },
+      query: (follower) => ({
+        url: "/followers",
+        method: "POST",
+        body: follower,
+      }),
       invalidatesTags: ["follower"],
+    }),
+    toggleFollower: builder.mutation({
+      query: (data) => ({
+        url: "/followers/toggle",
+        method: "POST",
+        body: data, // { userId, shopId }
+      }),
+      invalidatesTags: ["follower" , "user"],
     }),
     getFollowers: builder.query({
-      query: () => {
-        return {
-          url: "/followers",
-          method: "GET",
-        };
-      },
+      query: () => ({
+        url: "/followers",
+        method: "GET",
+      }),
       providesTags: ["follower"],
     }),
-    getSingleFollower: builder.query({
-      query: (id) => {
-        return {
-          url: `/followers/${id}`,
-          method: "GET",
-        };
-      },
+    getFollowersByShop: builder.query({
+      query: (shopId) => ({
+        url: `/followers/shop/${shopId}`,
+        method: "GET",
+      }),
+      providesTags: ["follower"],
     }),
-    updateSingleFollower: builder.mutation({
-      query: (data) => {
-        return {
-          url: `/followers/${data?.id}`,
-          method: "PUT",
-          body: data?.follower,
-        };
-      },
-      invalidatesTags: ["follower"],
+    getFollowedShopsByUser: builder.query({
+      query: (userId) => ({
+        url: `/followers/user/${userId}`,
+        method: "GET",
+      }),
+      providesTags: ["follower"],
     }),
-    deleteSingleFollower: builder.mutation({
-      query: (id) => {
-        return {
-          url: `/followers/${id}`,
-          method: "DELETE",
-        };
-      },
+    deleteFollower: builder.mutation({
+      query: (data) => ({
+        url: "/followers",
+        method: "DELETE",
+        body: data, // { userId, shopId }
+      }),
       invalidatesTags: ["follower"],
     }),
   }),
@@ -112,8 +52,11 @@ const followerApi = baseApi.injectEndpoints({
 
 export const {
   useAddFollowerMutation,
+  useToggleFollowerMutation,
   useGetFollowersQuery,
-  useGetSingleFollowerQuery,
-  useUpdateSingleFollowerMutation,
-  useDeleteSingleFollowerMutation,
+  useGetFollowersByShopQuery,
+  useGetFollowedShopsByUserQuery,
+  useDeleteFollowerMutation,
 } = followerApi;
+
+export default followerApi;

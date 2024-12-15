@@ -10,14 +10,11 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"; // Import dialog components
-import {
-  useAddShopMutation,
-  useGetSingleShopQuery,
 
-} from "@/redux/features/follower/followerApi";
 import toast from "react-hot-toast";
 import { useAppSelector } from "@/redux/hooks";
 import { useUploadFileMutation } from "@/redux/features/upload/uploadApi";
+import { useAddShopMutation, useGetSingleShopQuery } from "@/redux/features/shop/shopApi";
 
 const ShopPage: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);

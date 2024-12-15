@@ -12,12 +12,14 @@ interface CartState {
   items: CartItem[];
   totalQuantity: number;
   totalPrice: number;
+  shopId : string
 }
 
 const initialState: CartState = {
   items: [],
   totalQuantity: 0,
   totalPrice: 0,
+  shopId : ""
 };
 
 const cartSlice = createSlice({
@@ -62,6 +64,7 @@ const cartSlice = createSlice({
       state.items = [];
       state.totalQuantity = 0;
       state.totalPrice = 0;
+      state.shopId = ""
     },
   },
 });

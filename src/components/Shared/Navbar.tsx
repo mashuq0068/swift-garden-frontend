@@ -156,11 +156,11 @@ const Navbar = () => {
               <FaTachometerAlt />
               <span>Dashboard</span>
             </Link>
-            <Link href='/'  className="flex items-center space-x-2 cursor-pointer hover:text-green-500">
+            <Link href='/shops'  className="flex items-center space-x-2 cursor-pointer hover:text-green-500">
               <FaStore />
               <span>Shops</span>
             </Link>
-            <Link href='/'  className="flex items-center space-x-2 cursor-pointer hover:text-green-500">
+            <Link href='/flash-sales'  className="flex items-center space-x-2 cursor-pointer hover:text-green-500">
               <FaTags />
               <span>Flash Sales</span>
             </Link>
@@ -168,7 +168,7 @@ const Navbar = () => {
               <FaEye />
               <span>Recently Viewed</span>
             </Link>
-            <Link href='/'  className="flex items-center space-x-2 cursor-pointer hover:text-green-500 mt-4">
+            <Link href='/order-history'  className="flex items-center space-x-2 cursor-pointer hover:text-green-500 mt-4">
               <FaHistory />
               <span>Order History</span>
             </Link>

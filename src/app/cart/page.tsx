@@ -6,12 +6,15 @@ import {
   updateQuantity,
   clearCart,
 } from "@/redux/features/cart/cartSlice";
-
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const CartPage: React.FC = () => {
+  
+  const router = useRouter();
   const dispatch = useAppDispatch();
-  const cart = useAppSelector((state) => state.cart); // Get cart from Redux state
-
+  const cart = useAppSelector((state) => state.cart); 
+  console.log(cart);// Get cart from Redux state
 
   const handleQuantityChange = (id: number, quantity: number) => {
     if (quantity === 0) {
@@ -117,12 +120,12 @@ const CartPage: React.FC = () => {
                 <p>${cart.totalPrice}</p>
               </div>
             </div>
-            <button
-              onClick={() => dispatch(clearCart())}
-              className="mt-4 w-full py-2 bg-green-500 text-white rounded-lg"
+            <Link
+              href="/stripe-payment"
+              className="mt-4 w-full btn-primary inline-block px-4 py-2 text-center bg-green-500 text-white hover:bg-green-600 rounded-lg"
             >
               Go For Payment
-            </button>
+            </Link>
           </div>
         </div>
       </div>

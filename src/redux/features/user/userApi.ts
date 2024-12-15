@@ -12,9 +12,9 @@ const userApi = baseApi.injectEndpoints({
       },
     }),
     getProfile: builder.query({
-      query: () => {
+      query: (id) => {
         return {
-          url: "/users/me",
+          url: `/users/${id}`,
           method: "GET",
         };
       },
