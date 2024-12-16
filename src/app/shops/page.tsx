@@ -99,9 +99,9 @@ export default function ShopList() {
                   <Link
                     href={`/shops/${shop.id}`}
                     onClick={() => handleViewProducts(shop.id)}
-                    className="px-4 py-2 rounded-lg text-white bg-green-500 hover:bg-green-600 transition duration-200 w-1/2"
+                    className="px-4 py-2 text-nowrap text-center rounded-lg text-white bg-green-500 hover:bg-green-600 transition duration-200 w-1/2"
                   >
-                    View Products
+                    View Shop
                   </Link>
                 </div>
               </div>

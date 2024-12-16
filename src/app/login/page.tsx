@@ -2,21 +2,37 @@
 "use client";
 
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
 import { IUser, setUser } from "@/redux/features/auth/authSlice";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Cookies from "js-cookie";
+import useLoadingStore from "@/store/loadingStore";
 
 const LoginPage = () => {
   const [signIn] = useLoginMutation();
+  const auth = useAppSelector((state) => state.auth);
+  const { setLoading } = useLoadingStore();
   const dispatch = useAppDispatch();
   const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // Using useEffect to handle navigation based on auth role
+  useEffect(() => {
+    if (auth.role) {
+      setLoading(false)
+      if (auth.role === "VENDOR") {
+        router.push("/vendor");
+      } else if (auth.role === "ADMIN") {
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
+    }
+  }, [auth.role, router]);
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -28,11 +44,11 @@ const LoginPage = () => {
         name: null,
         email: null,
         role: null,
-        id: null
+        id: null,
       };
-      console.log("login",userData);
+      console.log("login", userData);
       const user: IUser = {
-        id : userData?.id,
+        id: userData?.id,
         name: userData?.name,
         email: userData?.email,
         role: userData?.role,
@@ -41,22 +57,21 @@ const LoginPage = () => {
       Cookies.set("token", res?.token);
       // setting user the persist redux store
       dispatch(setUser(user));
-
-      const redirectTo = localStorage.getItem("redirectAfterLogin");
-      const role = localStorage.getItem("role");
-      if (role === "VENDOR") {
-        router.push("/vendor");
-      } else {
-        if (redirectTo) {
-          router.push(redirectTo);
-          localStorage.removeItem("redirectAfterLogin");
-        } else {
-          router.push("/");
-        }
-      }
-      setEmail("");
-      setPassword("");
-      localStorage.removeItem("role");
+      setLoading(true)
+      // if (auth.role) {
+      //   if (auth.role === "VENDOR") {
+      //     router.push("/vendor");
+      //     setLoading(false);
+      //   } else if (auth.role === "ADMIN") {
+      //     router.push("/admin");
+      //     setLoading(false);
+      //   } else {
+      //     router.push("/");
+      //     setLoading(false);
+      //   }
+      // } else {
+      //   setLoading(true);
+      // }
     } catch (error) {
       toast.error(
         (error as { message?: string })?.message || "Something went wrong"

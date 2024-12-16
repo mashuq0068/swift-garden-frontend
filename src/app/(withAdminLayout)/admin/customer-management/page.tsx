@@ -1,3 +1,6 @@
+"use client"
+/* 
+eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import {
   Table,
@@ -20,28 +23,23 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { useDeleteSingleUserMutation, useGetAllUsersQuery } from "@/redux/features/user/userApi";
+import toast from "react-hot-toast";
 
 const CustomerManagement = () => {
-  // Mock data for user records (could be replaced with fetched data)
-  const users = [
-    {
-      id: "1",
-      name: "John Doe",
-      email: "john.doe@example.com",
-      phone: "123-456-7890",
-      role: "USER",
-      status: "ACTIVE",
-    },
-    {
-      id: "2",
-      name: "Jane Smith",
-      email: "jane.smith@example.com",
-      phone: "098-765-4321",
-      role: "VENDOR",
-      status: "BLOCKED",
-    },
-    // Add more user data as needed
-  ];
+   // Mock data for user records (could be replaced with fetched data)
+
+   const { data } = useGetAllUsersQuery({ role: "USER" });
+   const [deleteUser] = useDeleteSingleUserMutation();
+   const handleDelete = async (id: string) => {
+     try {
+       await deleteUser(id).unwrap();
+       toast.success("User deleted successfully");
+     } catch (error) {
+       console.error("Delete Error:", error);
+       toast.error("Failed to delete user. Please try again.");
+     }
+   };
 
   return (
     <div>
@@ -50,20 +48,22 @@ const CustomerManagement = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
+              <TableHead>Customer Name</TableHead>
+              <TableHead>Customer ID</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Phone</TableHead>
+         
               <TableHead>Role</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users?.map((user) => (
+            {data?.data?.map((user:any) => (
               <TableRow key={user?.id}>
-                <TableCell className="font-medium">{user.name}</TableCell>
+                <TableCell >{user.name}</TableCell>
+                <TableCell >{user.id}</TableCell>
                 <TableCell>{user?.email}</TableCell>
-                <TableCell>{user?.phone}</TableCell>
+              
                 <TableCell>
                   {user?.role.charAt(0).toUpperCase() +
                     user.status.slice(1).toLowerCase()}
@@ -96,7 +96,7 @@ const CustomerManagement = () => {
                         <AlertDialogCancel className="btn-primary bg-gray-200 text-black hover:text-black hover:bg-gray-300">
                           Cancel
                         </AlertDialogCancel>
-                        <AlertDialogAction className="btn-primary bg-red-500 hover:bg-red-600">
+                        <AlertDialogAction onClick={() => handleDelete(user?.id)} className="btn-primary bg-red-500 hover:bg-red-600">
                           Delete
                         </AlertDialogAction>
                       </AlertDialogFooter>

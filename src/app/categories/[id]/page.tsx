@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useGetSingleCategoryQuery } from "@/redux/features/category/category.api";
-import { useParams, useRouter} from "next/navigation";
+import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
 
 const CategoryProductsPage = () => {
   const params = useParams();
@@ -40,8 +41,15 @@ const CategoryProductsPage = () => {
               </div>
               {/* Content Section */}
               <div className="p-4 space-y-2">
-                <h3 className="text-gray-800 font-medium text-lg truncate">
+                <h3 className="text-gray-800 flex justify-between font-medium text-lg truncate">
                   {product.name}
+                  <Image
+                    src={product?.shop?.logo}
+                    alt="product"
+                    className="rounded-full object-cover"
+                    width={30}
+                    height={30}
+                  />
                 </h3>
                 <p className="text-gray-500 text-sm line-clamp-2">
                   {product.description}

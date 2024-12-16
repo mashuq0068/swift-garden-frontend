@@ -1,8 +1,10 @@
 "use client";
 import Aos from "aos";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const Hero = () => {
+  const router = useRouter()
   useEffect(() => {
     Aos.init({
       duration: 1000,
@@ -31,10 +33,10 @@ const Hero = () => {
             </p>
           </div>
           <div className="flex space-x-4">
-            <button className="bg-green-500 text-white px-6 py-3 rounded-md font-semibold hover:bg-green-500">
+            <button onClick={() => router.push('/shops')} className="bg-green-500 text-white px-6 py-3 rounded-md font-medium hover:bg-green-500">
               Start Shopping
             </button>
-            <button className="bg-gray-100 text-gray-800 px-6 py-3 rounded-md font-semibold border border-gray-300 hover:bg-gray-200">
+            <button onClick={() => router.push('/registration')} className="bg-gray-100 text-gray-800 px-6 py-3 rounded-md font-medium border border-gray-300 hover:bg-gray-200">
               Join Us
             </button>
           </div>

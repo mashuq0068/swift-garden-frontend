@@ -5,6 +5,7 @@ import { useCreateRecentProductMutation } from "@/redux/features/recentProducts/
 import { useAppSelector } from "@/redux/hooks";
 import useLoadingStore from "@/store/loadingStore";
 import Aos from "aos";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -100,7 +101,6 @@ const Products = () => {
                 />
 
                 {/* Shop Name Badge */}
-              
 
                 <span className="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
                   New
@@ -111,8 +111,9 @@ const Products = () => {
               <div className="p-4 space-y-2">
                 <h3 className="text-gray-800 flex justify-between font-medium text-lg truncate">
                   {product.name}
-                  {/* <p className="p-2 rounded-xl bg-green-500 text-white">{product.shop.name}</p> */}
+                  <Image src={product.shop.logo} alt="product" className="rounded-full object-cover" width={30} height={30} />
                 </h3>
+
                 <p className="text-gray-500 text-sm line-clamp-2">
                   {product.description}
                 </p>

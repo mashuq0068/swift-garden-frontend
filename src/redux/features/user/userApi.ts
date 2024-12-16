@@ -18,13 +18,14 @@ const userApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags : ["user"]
+      providesTags: ["user"],
     }),
     getAllUsers: builder.query({
-      query: () => {
+      query: (queryParams) => {
         return {
           url: "/users",
           method: "GET",
+          params: queryParams,
         };
       },
       providesTags: ["user"],

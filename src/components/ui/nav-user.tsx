@@ -24,18 +24,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
+import { useAppDispatch, useAppSelector } from "@/redux/hooks"
+import { logout } from "@/redux/features/auth/authSlice"
 
 
-export function NavUser({
-
-}: {
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
-}) {
+export function NavUser() {
   // const { isMobile } = useSidebar()
+  const dispatch = useAppDispatch()
+  const handleLogout = () => {
+        dispatch(logout())
+  }
+  const auth = useAppSelector((state) => state.auth)
 
   return (
     <DropdownMenu>
@@ -51,8 +50,8 @@ export function NavUser({
           <AvatarFallback className="rounded-lg">CN</AvatarFallback>
         </Avatar>
         <div className="hidden lg:flex flex-col text-left text-sm">
-          <span className="truncate font-semibold">Swift Garden</span>
-          <span className="truncate text-xs">swift@gmail.com</span>
+          <span className="truncate font-semibold">{auth.name}</span>
+          <span className="truncate text-xs">{auth.email}</span>
         </div>
         <ChevronsUpDown className="ml-auto size-4 hidden lg:block" />
       </button>
@@ -90,7 +89,7 @@ export function NavUser({
       <DropdownMenuSeparator /> */}
       <DropdownMenuItem>
         <LogOut />
-        <Link href="/">Log out</Link>
+        <button onClick={handleLogout}>Log out</button>
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>

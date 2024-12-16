@@ -70,7 +70,7 @@ const StripePaymentPage = () => {
       clientSecret,
       {
         payment_method: {
-          card: CardElement, // Use the CardElement here to collect card details
+          card: cardElement, // Use the CardElement here to collect card details
         },
       }
     );
@@ -107,7 +107,7 @@ const StripePaymentPage = () => {
     <Elements stripe={stripePromise}>
       <div className="min-h-screen bg-gray-100 p-6 flex flex-col justify-center items-center">
         <div className="w-full max-w-2xl bg-white p-8 rounded-lg shadow-lg">
-          <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
+          <h2 className="text-3xl  text-center text-gray-800 mb-6">
             Review Your Order
           </h2>
 
@@ -163,11 +163,14 @@ const StripePaymentPage = () => {
             />
             <button
               onClick={handlePayment}
+              style={{
+                fontWeight:"normal"
+              }}
               disabled={loading || !clientSecret}
-              className={`w-full py-3 text-white text-lg font-semibold rounded-lg ${
+              className={`w-full py-3  text-white text-lg rounded-lg ${
                 loading || !clientSecret
-                  ? "bg-gray-400"
-                  : "bg-green-500 hover:bg-green-600"
+                  ? "bg-gray-400 font-normal"
+                  : "bg-green-500  hover:bg-green-600"
               }`}
             >
               {loading ? "Processing..." : "Proceed to Payment"}

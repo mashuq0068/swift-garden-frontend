@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useState } from "react";
 import {
@@ -21,6 +22,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { RiDeleteBinLine } from "react-icons/ri";
+import {
+  useGetShopsQuery,
+  useUpdateSingleShopMutation,
+} from "@/redux/features/shop/shopApi";
+import toast from "react-hot-toast";
 
 const ShopManagement = () => {
   // Mock data for shops (can be replaced with fetched data)
@@ -40,7 +46,17 @@ const ShopManagement = () => {
     },
     // Add more shops as needed
   ]);
-
+  const { data } = useGetShopsQuery(undefined);
+  const [updateShop] = useUpdateSingleShopMutation();
+  const handelBlackListChange = async (status: string, id: string) => {
+    if (status === "ACTIVE") {
+      await updateShop({ status: "BLOCKED", id });
+      toast.success("Shop Blocked Successfully");
+    } else {
+      await updateShop({ status: "ACTIVE", id });
+      toast.success("Shop Unblocked Successfully");
+    }
+  };
   return (
     <div>
       <SectionHeader title="Shop Management" />
@@ -56,9 +72,17 @@ const ShopManagement = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {shops.map((shop) => (
+            {data?.data?.map((shop: any) => (
               <TableRow key={shop.id}>
-                <TableCell className="font-medium">{shop.name}</TableCell>
+                <TableCell className="font-medium items-center flex gap-3">
+                <img
+                    src={shop?.logo}
+                    alt="logo"
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                  {shop.name}{" "}
+                
+                </TableCell>
                 <TableCell className="ellipsis">{shop.description}</TableCell>
                 <TableCell>
                   {shop.status.charAt(0).toUpperCase() +
@@ -67,7 +91,14 @@ const ShopManagement = () => {
 
                 <TableCell>
                   <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" />
+                    <input
+                      onChange={() =>
+                        handelBlackListChange(shop.status, shop.id)
+                      }
+                      type="checkbox"
+                      checked={shop?.status === "BLOCKED"}
+                      className="sr-only peer"
+                    />
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:bg-green-500 peer-checked:before:translate-x-5 before:content-[''] before:absolute before:top-0.5 before:left-[2px] before:bg-white before:border before:border-gray-300 before:rounded-full before:h-5 before:w-5 before:transition-transform"></div>
                   </label>
                 </TableCell>

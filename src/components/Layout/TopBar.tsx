@@ -2,7 +2,6 @@
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
-import SidebarItems from "./SidebarItems";
 import { NavUser } from "../ui/nav-user";
 
 function TopBar() {
@@ -11,7 +10,7 @@ function TopBar() {
       <SidebarTrigger className="-ml-1" />
       <Separator orientation="vertical" className="mr-2 bg-gray-500 h-4" />
       <div className="ml-auto text-end">
-        <NavUser user={(SidebarItems as { user?: any }).user} />
+        <NavUser  />
       </div>
     </header>
   );

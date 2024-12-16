@@ -6,9 +6,14 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import SidebarItems from "./SidebarItems";
+import  {
+  AdminItems,
+  UserItems,
+  VendorItems,
+} from "./SidebarItems";
 import { TeamSwitcher } from "../ui/team-switcher";
 import { NavMain } from "../ui/nav-main";
+import { useAppSelector } from "@/redux/hooks";
 
 // Define the props type for AppSidebar
 interface AppSidebarProps {
@@ -17,13 +22,20 @@ interface AppSidebarProps {
 }
 
 const AppSidebar: React.FC<AppSidebarProps> = (props) => {
+  const auth = useAppSelector((state) => state.auth);
+const sidebarItems =
+    auth.role === "VENDOR"
+      ? VendorItems.navMain
+      : auth.role === "ADMIN"
+      ? AdminItems.navMain
+      : UserItems.navMain;
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher/>
+        <TeamSwitcher />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={SidebarItems.navMain} />
+        <NavMain items={sidebarItems} />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
