@@ -64,9 +64,7 @@ const ProductManagement = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<any>(null);
-  console.log("isEditing = >", isEditing);
-  console.log((productForm as { photo?: any }).photo);
-  console.log(productForm);
+  
 
   // Handle image change
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

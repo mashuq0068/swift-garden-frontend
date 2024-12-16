@@ -72,14 +72,14 @@ export default function ShopList() {
                 <img
                   src={shop.logo}
                   alt={shop.name}
-                  className="h-24 w-24 object-contain rounded-full mb-4"
+                  className="h-24 w-24 object-cover rounded-full mb-4"
                 />
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
                   {shop.name}
                 </h3>
-                <p className="text-sm text-gray-600 text-center mb-4">
+                {/* <p className="text-sm text-gray-600 text-center mb-4">
                   {shop.description}
-                </p>
+                </p> */}
                 <div className="flex gap-4 w-full justify-center">
                   <button
                     onClick={() => handleFollow(shop.id)}

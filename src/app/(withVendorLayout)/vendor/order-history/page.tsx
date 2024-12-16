@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   Table,
   TableBody,
@@ -9,33 +10,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import SectionHeader from "@/components/Shared/SectionHeader";
+import { useGetOrdersQuery } from "@/redux/features/order/order.api";
 
-const OrderHistory = () => {
-  // Mock data for orders (can be replaced with fetched data)
-  const [orders] = useState([
-    {
-      id: "1",
-      shop: { name: "Green Farm" },
-      totalPrice: 29.99,
-      status: "PENDING", // Assuming OrderStatus is an enum
-      createdAt: "2024-12-01T14:30:00Z",
-    },
-    {
-      id: "2",
-      shop: { name: "Fresh Produce" },
-      totalPrice: 15.75,
-      status: "COMPLETED",
-      createdAt: "2024-12-02T10:45:00Z",
-    },
-    {
-      id: "3",
-      shop: { name: "Veggie Market" },
-      totalPrice: 45.50,
-      status: "CANCELLED",
-      createdAt: "2024-12-03T12:20:00Z",
-    },
-    // Add more orders as needed
-  ]);
+const OrderPage = () => {
+  // Mock data for transactions (replace with actual fetched data)
+  const { data } = useGetOrdersQuery(undefined);
+  const shopOrders = data?.data?.data?.filter(
+    (order: any) => order.shopId === localStorage.getItem("shop")
+  );
 
   return (
     <div>
@@ -45,20 +27,23 @@ const OrderHistory = () => {
           <TableHeader>
             <TableRow>
               <TableHead>Order ID</TableHead>
-              <TableHead>Shop</TableHead>
+
               <TableHead>Total Price</TableHead>
+              <TableHead>Payment Date</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Created Date</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orders.map((order) => (
+            {shopOrders?.map((order: any) => (
               <TableRow key={order.id}>
                 <TableCell>{order.id}</TableCell>
-                <TableCell>{order.shop.name}</TableCell>
+
                 <TableCell>${order.totalPrice.toFixed(2)}</TableCell>
-                <TableCell>{order.status}</TableCell>
-                <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
+
+                <TableCell>
+                  {new Date(order.createdAt).toLocaleString()}
+                </TableCell>
+                <TableCell>{"Paid"}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -68,4 +53,4 @@ const OrderHistory = () => {
   );
 };
 
-export default OrderHistory;
+export default OrderPage;

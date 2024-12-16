@@ -26,7 +26,7 @@ import { useGetCategoriesQuery } from "@/redux/features/category/category.api";
 import Link from "next/link";
 import { ChevronsUpDown, LogOut, User } from "lucide-react";
 
-import { Avatar} from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,16 +40,17 @@ import { logout } from "@/redux/features/auth/authSlice";
 
 function generateAvatarColor(name: string): string {
   // Simple hash function to convert name into a color
-  const hash = name?.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const hash = name
+    ?.split("")
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const color = `hsl(${hash % 360}, 70%, 60%)`;
   console.log(hash); // Generates a hue from the hash
   return color;
 }
 
-
-
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const role = useAppSelector((state) => state.auth.role);
   const cart = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const handleLogout = () => {
@@ -115,7 +116,10 @@ const Navbar = () => {
     const searchTerm = (e.target as HTMLFormElement).search.value;
     dispatch(setSearchTerm(searchTerm));
   };
+  // make dashboard dynamic url
+  const dashboardUrl = role === "ADMIN" ? "/admin" : "/vendor";
 
+  // check for conditional layout
   const isAdminOrVendorPath =
     pathName.includes("/admin") || pathName.includes("/vendor");
 
@@ -162,7 +166,7 @@ const Navbar = () => {
                 </span>
               )}
             </Link>
-            {auth.name ? 
+            {auth.name ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100">
@@ -174,7 +178,6 @@ const Navbar = () => {
                         {auth.name.split("")[0]}
                         {/* Display first letter of first name */}
                       </div>
-                     
                     </Avatar>
                     <div className="hidden lg:flex flex-col text-left text-sm">
                       <span className="truncate font-semibold">
@@ -193,17 +196,16 @@ const Navbar = () => {
                 >
                   <DropdownMenuLabel className="p-0 font-normal">
                     <div className="flex justify-center items-center gap-2 px-3 py-2 text-left text-sm">
-                    <Avatar className="h-8 w-8 rounded-lg">
-                      <div
-                        className="flex justify-center w-8 h-8 rounded-full items-center text-white font-semibold"
-                        style={{ backgroundColor: avatarColor }}
-                      >
-                        {auth.name.split("")[0]}
-                        {/* Display first letter of first name */}
-                      </div>
-                     
-                    </Avatar>
-                     </div>
+                      <Avatar className="h-8 w-8 rounded-lg">
+                        <div
+                          className="flex justify-center w-8 h-8 rounded-full items-center text-white font-semibold"
+                          style={{ backgroundColor: avatarColor }}
+                        >
+                          {auth.name.split("")[0]}
+                          {/* Display first letter of first name */}
+                        </div>
+                      </Avatar>
+                    </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
@@ -223,12 +225,15 @@ const Navbar = () => {
                     <button onClick={handleLogout}>Log out</button>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
-              </DropdownMenu> :
-              <Link href='/login' className="btn-outlined border border-green-500 text-green-500 hover:bg-green-500 hover:text-white px-4 py-2 rounded-md transition">
-              Login
-            </Link>
-            
-            }
+              </DropdownMenu>
+            ) : (
+              <Link
+                href="/login"
+                className="btn-outlined border border-green-500 text-green-500 hover:bg-green-500 hover:text-white px-4 py-2 rounded-md transition"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
 
@@ -255,13 +260,15 @@ const Navbar = () => {
         <div className="p-4">
           <h2 className="text-xl font-semibold mb-4">Menu</h2>
           <ul className="space-y-3">
-            <Link
-              href="/"
-              className="flex items-center space-x-2 cursor-pointer hover:text-green-500"
-            >
-              <FaTachometerAlt />
-              <span>Dashboard</span>
-            </Link>
+            {role !== "USER" && (
+              <Link
+                href={dashboardUrl}
+                className="flex items-center space-x-2 cursor-pointer hover:text-green-500"
+              >
+                <FaTachometerAlt />
+                <span>Dashboard</span>
+              </Link>
+            )}
             <Link
               href="/shops"
               className="flex items-center space-x-2 cursor-pointer hover:text-green-500"

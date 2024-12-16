@@ -33,42 +33,24 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useUploadFileMutation } from "@/redux/features/upload/uploadApi";
+import {
+  useCreateCategoryMutation,
+  useDeleteCategoryMutation,
+  useGetCategoriesQuery,
+  useUpdateCategoryMutation,
+} from "@/redux/features/category/category.api";
+import toast from "react-hot-toast";
 
 const CategoryManagement = () => {
-  // Mock data for categories (can be replaced with fetched data)
-  const [categories, setCategories] = useState([
-    { id: "1", name: "Leafy Greens" },
-    { id: "2", name: "Root Vegetables" },
-    { id: "3", name: "Cruciferous" },
-    // Add more categories as needed
-  ]);
+  const [cloudinaryUrl, setCloudinaryUrl] = useState("");
+  const [uploadPhoto] = useUploadFileMutation();
+  const [createCategory] = useCreateCategoryMutation();
+  const [updateCategory] = useUpdateCategoryMutation();
+  const [deleteCategory] = useDeleteCategoryMutation();
 
-  // State to handle modal form for create/edit
   const [categoryForm, setCategoryForm] = useState({ id: "", name: "" });
-//   const [isEditing, setIsEditing] = useState(false);
-
-  // Handle category form submission
-//   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     if (isEditing) {
-//       // Edit category
-//       setCategories(
-//         categories.map((category) =>
-//           category.id === categoryForm.id
-//             ? { ...category, name: categoryForm.name }
-//             : category
-//         )
-//       );
-//     } else {
-//       // Create new category
-//       setCategories([
-//         ...categories,
-//         { id: Date.now().toString(), name: categoryForm.name },
-//       ]);
-//     }
-//     setCategoryForm({ id: "", name: "" });
-//     setIsEditing(false);
-//   };
+  const { data: categories } = useGetCategoriesQuery(undefined);
 
   // Open dialog for editing a category
   const openEditDialog = (category: any) => {
@@ -80,6 +62,120 @@ const CategoryManagement = () => {
   const openCreateDialog = () => {
     setCategoryForm({ id: "", name: "" });
     // setIsEditing(false);
+  };
+
+  // Handle image change
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const res = await uploadPhoto(formData).unwrap();
+        setCloudinaryUrl(res?.data?.photo);
+      } catch (error) {
+        console.error("File upload failed:", error);
+      }
+    }
+  };
+
+  // Photo uploader component
+  const PhotoUploader = () => (
+    <div className="max-w-md w-full mb-8">
+      <label className="block pb-3 text-sm font-medium form-label text-gray-700">
+        Upload Product Photo
+      </label>
+      <label
+        htmlFor="file-upload"
+        className="flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:border-primary transition duration-200 ease-in-out"
+      >
+        <input
+          id="file-upload"
+          name="file-upload"
+          type="file"
+          className="sr-only"
+          onChange={handleImageChange}
+        />
+        <div className="space-y-1 text-center">
+          {cloudinaryUrl ? (
+            <img
+              src={cloudinaryUrl}
+              alt="Selected"
+              className="h-48 w-auto mx-auto rounded"
+            />
+          ) : (
+            <svg
+              className="mx-auto h-12 w-12 text-gray-400"
+              stroke="currentColor"
+              fill="none"
+              viewBox="0 0 48 48"
+              aria-hidden="true"
+            >
+              <path
+                d="M28 8H20a4 4 0 00-4 4v1H8a4 4 0 00-4 4v18a4 4 0 004 4h32a4 4 0 004-4V17a4 4 0 00-4-4h-8v-1a4 4 0 00-4-4z"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M14 29l7 7 7-7M14 17v20"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          )}
+          <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+        </div>
+      </label>
+    </div>
+  );
+  const handleCreateCategory = async () => {
+    const data = {
+      name: categoryForm.name,
+      image: cloudinaryUrl,
+    };
+    if (!data.name || !data.image) {
+      toast.error("All fields are required");
+    }
+    try {
+      await createCategory(data).unwrap();
+      toast.success("Category created successfully");
+      setCloudinaryUrl("");
+    } catch {
+      toast.error("Failed to create category");
+    }
+  };
+  const handleEditCategory = async (category: any) => {
+    const data = {
+      name: categoryForm.name || category.name,
+      image: cloudinaryUrl || category.image,
+      id: category.id,
+    };
+    console.log(data?.id);
+    if (!data.name || !data.image) {
+      toast.error("All fields are required");
+    }
+    try {
+      await updateCategory(data).unwrap();
+      toast.success("Category created successfully");
+      setCloudinaryUrl("");
+    } catch {
+      toast.error("Failed to create category");
+    }
+  };
+  const handleEditDialogClose = () => {
+    setCloudinaryUrl("")
+  }
+  // delete
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteCategory(id);
+      toast.success("Category deleted successfully");
+    } catch {
+      toast.error("Failed to delete");
+    }
   };
 
   return (
@@ -113,6 +209,7 @@ const CategoryManagement = () => {
                         {/* Category Name */}
                         <div className="grid grid-cols-1 text-[16px] mt-4 gap-4">
                           <div>
+                            <PhotoUploader />
                             <label className="form-label">Category Name</label>
                             <input
                               type="text"
@@ -133,6 +230,7 @@ const CategoryManagement = () => {
                   </DialogHeader>
                   <DialogFooter>
                     <button
+                      onClick={handleCreateCategory}
                       type="submit"
                       className="btn-primary bg-green-500 font-normal"
                     >
@@ -158,12 +256,20 @@ const CategoryManagement = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {categories.map((category) => (
+            {categories?.data?.map((category: any) => (
               <TableRow key={category.id}>
-                <TableCell className="font-medium">{category.name}</TableCell>
+                <TableCell className="font-medium flex gap-3 items-center">
+                  {" "}
+                  <img
+                    src={category?.image}
+                    alt="logo"
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                  {category.name}
+                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <Dialog>
+                    <Dialog onOpenChange={handleEditDialogClose}>
                       <DialogTrigger asChild>
                         <button
                           onClick={() => openEditDialog(category)}
@@ -180,6 +286,66 @@ const CategoryManagement = () => {
                           </DialogTitle>
                           <DialogDescription>
                             <form>
+                              {/* image */}
+                              <div className="max-w-md w-full mb-8">
+                                <label className="block pb-3 text-sm font-medium form-label text-gray-700">
+                                  Upload Product Photo
+                                </label>
+                                <label
+                                  htmlFor="file-upload"
+                                  className="flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:border-primary transition duration-200 ease-in-out"
+                                >
+                                  <input
+                                    id="file-upload"
+                                    name="file-upload"
+                                    type="file"
+                                    className="sr-only"
+                                    onChange={handleImageChange}
+                                  />
+                                  <div className="space-y-1 text-center">
+                                    {cloudinaryUrl ? (
+                                      <img
+                                        src={cloudinaryUrl}
+                                        alt="Selected"
+                                        className="h-48 w-auto mx-auto rounded"
+                                      />
+                                    ) : (
+                                      <img
+                                        src={category?.image}
+                                        alt="Selected"
+                                        className="h-48 w-auto mx-auto rounded"
+                                      />
+                                    )}
+
+                                    {(!cloudinaryUrl || !category?.image) && (
+                                      <svg
+                                        className="mx-auto h-12 w-12 text-gray-400"
+                                        stroke="currentColor"
+                                        fill="none"
+                                        viewBox="0 0 48 48"
+                                        aria-hidden="true"
+                                      >
+                                        <path
+                                          d="M28 8H20a4 4 0 00-4 4v1H8a4 4 0 00-4 4v18a4 4 0 004 4h32a4 4 0 004-4V17a4 4 0 00-4-4h-8v-1a4 4 0 00-4-4z"
+                                          strokeWidth="2"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                        />
+                                        <path
+                                          d="M14 29l7 7 7-7M14 17v20"
+                                          strokeWidth="2"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                        />
+                                      </svg>
+                                    )}
+
+                                    <p className="text-xs text-gray-500">
+                                      PNG, JPG, GIF up to 10MB
+                                    </p>
+                                  </div>
+                                </label>
+                              </div>
                               {/* Category Name */}
                               <div className="grid grid-cols-1 text-[16px] mt-4 gap-4">
                                 <div>
@@ -188,7 +354,7 @@ const CategoryManagement = () => {
                                   </label>
                                   <input
                                     type="text"
-                                    value={categoryForm.name}
+                                    defaultValue={category.name}
                                     onChange={(e) =>
                                       setCategoryForm({
                                         ...categoryForm,
@@ -204,7 +370,11 @@ const CategoryManagement = () => {
                           </DialogDescription>
                         </DialogHeader>
                         <DialogFooter>
-                          <button type="submit" className="btn-primary bg-green-500 ">
+                          <button
+                            onClick={() => handleEditCategory(category)}
+                            type="submit"
+                            className="btn-primary bg-green-500 "
+                          >
                             Update Category
                           </button>
                         </DialogFooter>
@@ -232,13 +402,7 @@ const CategoryManagement = () => {
                             Cancel
                           </AlertDialogCancel>
                           <AlertDialogAction
-                            onClick={() =>
-                              setCategories(
-                                categories.filter(
-                                  (cat) => cat.id !== category.id
-                                )
-                              )
-                            }
+                            onClick={() => handleDelete(category.id)}
                             className="btn-primary bg-red-500 hover:bg-red-600"
                           >
                             Delete

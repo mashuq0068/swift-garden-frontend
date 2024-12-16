@@ -16,7 +16,7 @@ const followerApi = baseApi.injectEndpoints({
         method: "POST",
         body: data, // { userId, shopId }
       }),
-      invalidatesTags: ["follower" , "user"],
+      invalidatesTags: ["follower" , "user" , "shop"],
     }),
     getFollowers: builder.query({
       query: () => ({

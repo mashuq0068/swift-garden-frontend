@@ -190,11 +190,11 @@ console.log(category);
         </div>
       </div>
     </div>
-    <div className="min-h-screen mt-14 ">
+    <div className="min-h-screen px-6 ">
           {/* <h1 className="text-center text-4xl mb-12 font-bold text-gray-800">
       Our <span className="text-green-500">Products</span>
     </h1> */}
-          <div className="container mx-auto px-4">
+          <div className=" mx-auto ">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {category?.data?.products?.map((product: any, i: number) => (
                 <div

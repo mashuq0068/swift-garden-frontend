@@ -27,7 +27,7 @@ const categoryApi = baseApi.injectEndpoints({
       query: (data) => ({
         url: `/categories/${data.id}`,
         method: "PUT",
-        body: data.category,
+        body: data,
       }),
       invalidatesTags: ["category"],
     }),
