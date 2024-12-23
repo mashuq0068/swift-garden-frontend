@@ -192,9 +192,7 @@ NEXT_PUBLIC_STRIPE_PUBLIC_KEY=your-stripe-public-key
 
 ---
 
-## License
 
-This project is licensed under the MIT License. See the `LICENSE` file for details.
 
 ---
 
