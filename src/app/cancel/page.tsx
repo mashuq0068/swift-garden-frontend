@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 
 const CancelPage = () => {
@@ -9,7 +10,7 @@ const CancelPage = () => {
           Unfortunately, your payment was not processed. If this was a mistake, you can try again.
         </p>
         <div className="mt-6">
-          <a href="/" className="text-red-600 hover:underline">Return to Homepage</a>
+          <Link href="/" className="text-red-600 hover:underline">Return to Homepage</Link>
         </div>
       </div>
     </div>

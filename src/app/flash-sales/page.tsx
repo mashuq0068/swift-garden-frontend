@@ -19,6 +19,7 @@ const FlashSalesPage = () => {
       console.log(err);
     }
   };
+  console.log(data);
 
   return (
     <div className="min-h-screen mt-14 ">
@@ -27,9 +28,9 @@ const FlashSalesPage = () => {
       </h1>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {data?.data?.map((product: any, i: number) => (
+          {data?.data?.map((data: any, i: number) => (
             <div
-              onClick={() => handleProductClick(product.id)}
+              onClick={() => handleProductClick(data.id)}
               data-aos="fade-right"
               key={i}
               className="bg-white cursor-pointer rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
@@ -37,8 +38,8 @@ const FlashSalesPage = () => {
               {/* Image Section */}
               <div className="relative h-56">
                 <img
-                  src={product.photo}
-                  alt={product.title}
+                  src={data?.product?.photo}
+                  alt={data?.product?.name}
                   className="h-full w-full object-contain"
                 />
 
@@ -49,14 +50,14 @@ const FlashSalesPage = () => {
               {/* Content Section */}
               <div className="p-4 space-y-2">
                 <h3 className="text-gray-800 font-medium text-lg truncate">
-                  {product.name}
+                  {data?.product?.name}
                 </h3>
                 <p className="text-gray-500 text-sm line-clamp-2">
-                  {product.description}
+                  {data?.product?.description}
                 </p>
                 <div className="flex items-center justify-between">
                   <span className="text-xl font-semibold text-gray-900">
-                    €{product.price.toFixed(2)}
+                    €{data?.product?.price?.toFixed(2)}
                   </span>
                 </div>
               </div>

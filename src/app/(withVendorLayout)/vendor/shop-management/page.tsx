@@ -60,7 +60,7 @@ const ShopPage: React.FC = () => {
         const res = await uploadPhoto(formData).unwrap();
         setCloudinaryUrl(res?.data?.photo);
       } catch (error) {
-        console.error("File upload failed:", error);
+        console.log("File upload failed:", error);
       }
     }
     if (file) {
@@ -89,7 +89,7 @@ const ShopPage: React.FC = () => {
       toast.success("Shop created successfully!");
       localStorage.setItem("shop", res?.data?.id);
     } catch (error) {
-      console.error("Error creating shop:", error);
+      console.log("Error creating shop:", error);
       toast.error("Failed to create the shop.");
     }
   };
@@ -103,7 +103,7 @@ const ShopPage: React.FC = () => {
     console.log("shop data =>", shopData);
 
     try {
-      const res = await fetch(`http://localhost:5000/api/shops/${shopId}`, {
+      const res = await fetch(`https://swift-garden-backend.vercel.app/api/shops/${shopId}`, {
         method: "PUT", 
         headers: {
           "Content-Type": "application/json", 
@@ -126,7 +126,7 @@ const ShopPage: React.FC = () => {
       }
     } catch (error) {
       // console.log("Error updating shop:", error);
-      console.error(error);
+      console.log(error);
     }
   };
 

@@ -1,36 +1,203 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Swift Garden
 
-## Getting Started
+Swift Garden is a web application designed to streamline the purchase of fresh vegetables from various vendors. The platform includes three main modules:
 
-First, run the development server:
+1. **Customer Interface**: Allows users to browse, select, and purchase vegetables.
+2. **Vendor Dashboard**: Empowers vendors to manage their inventory, orders, and sales.
+3. **Admin Dashboard**: Offers administrative controls with features for monitoring and managing platform activities.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Table of Contents
+
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Folder Structure](#folder-structure)
+- [Environment Variables](#environment-variables)
+- [Setup and Installation](#setup-and-installation)
+- [Usage](#usage)
+
+---
+
+## Features
+
+### Customer Interface
+- Browse vegetables with filtering and sorting options.
+- Add items to a shopping cart and proceed with secure checkout.
+- View order history and track orders.
+
+### Vendor Dashboard
+- Manage inventory: add, update, or remove products.
+- Track and fulfill customer orders.
+- View detailed sales reports.
+
+### Admin Dashboard
+- Monitor vendor activities and manage accounts.
+- Generate reports on platform-wide sales and usage.
+- Manage user feedback and resolve issues.
+
+---
+
+## Technologies Used
+
+### Frontend
+- **Next.js**: React-based framework for server-side rendering and static site generation.
+- **Radix UI**: Accessible and customizable UI components.
+- **Tailwind CSS**: Utility-first CSS framework for custom styling.
+- **AOS**: Animation library for scroll-based animations.
+- **React Redux**: State management library.
+
+### Backend
+- **Node.js**: JavaScript runtime for server-side programming.
+- **Express.js**: Backend framework for REST APIs.
+- **Prisma**: ORM for database operations.
+- **PostgreSQL**: Relational database.
+
+### Others
+- **Stripe**: Payment gateway integration.
+- **Zustand**: Lightweight state management library.
+- **TypeScript**: Typed JavaScript for better scalability and maintainability.
+- **Docker**: Containerization for deployment.
+- **AWS**: Hosting and cloud services.
+
+---
+
+## Folder Structure
+
+```plaintext
+D:\level2\swift-garden\swift-garden-frontned
+├── .next/                       # Next.js build output
+├── .vercel/                     # Vercel deployment config
+├── node_modules/                # Node.js modules
+├── public/                      # Public assets
+├── src/                         # Source code
+│   ├── app/                     # Next.js app directory
+│   │   ├── (withAdminLayout)/   # Admin layout pages
+│   │   ├── (withVendorLayout)/  # Vendor layout pages
+│   │   ├── cancel/              # Order cancellation page
+│   │   ├── cart/                # Shopping cart page
+│   │   ├── categories/          # Product categories page
+│   │   ├── flash-sales/         # Flash sales page
+│   │   ├── fonts/               # Custom fonts
+│   │   ├── login/               # Login page
+│   │   ├── order-history/       # Order history page
+│   │   ├── products/            # Products page
+│   │   ├── recent-products/     # Recent products page
+│   │   ├── registration/        # Registration page
+│   │   ├── shops/               # Shops page
+│   │   ├── stripe-payment/      # Stripe payment integration
+│   │   ├── success/             # Order success page
+│   │   ├── favicon.ico          # Favicon
+│   │   ├── globals.css          # Global styles
+│   │   ├── layout.metadata.ts   # Metadata for layouts
+│   │   ├── layout.tsx           # Application layout
+│   │   ├── loading.tsx          # Loading screen
+│   │   └── page.tsx             # Main page
+│   ├── components/              # Reusable React components
+│   │   ├── Home/                # Home page components
+│   │   ├── Layout/              # Layout components
+│   │   ├── Shared/              # Shared components
+│   │   ├── shop/                # Shop-related components
+│   │   ├── Stripe-payment/      # Stripe payment components
+│   │   └── ui/                  # UI components
+│   ├── helpers/                 # Helper functions
+│   ├── hooks/                   # Custom React hooks
+│   ├── lib/                     # Libraries and utilities
+│   ├── redux/                   # Redux store setup
+│   └── store/                   # Zustand stores
+│       └── loadingStore.tsx
+├── .env                         # Environment variables
+├── .eslintrc.json               # ESLint configuration
+├── .gitignore                   # Git ignore rules
+├── components.json              # Components mapping
+├── next-env.d.ts                # Next.js environment types
+├── next.config.ts               # Next.js configuration
+├── package-lock.json            # Lock file for npm dependencies
+├── package.json                 # Project metadata and dependencies
+├── postcss.config.mjs           # PostCSS configuration
+├── README.md                    # Project README
+├── tailwind.config.ts           # Tailwind CSS configuration
+└── tsconfig.json                # TypeScript configuration
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Ensure that the following environment variables are set in a `.env` file:
 
-## Learn More
+```env
+NEXT_PUBLIC_STRIPE_PUBLIC_KEY=your-stripe-public-key
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Setup and Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Prerequisites
+- **Node.js**: >= 16.x
+- **Docker** (for containerized environments)
+- **PostgreSQL** database
 
-## Deploy on Vercel
+### Steps
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/swift-garden.git
+   cd swift-garden/swift-garden-frontned
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Build for production:
+   ```bash
+   npm run build
+   ```
+
+5. Start the production server:
+   ```bash
+   npm start
+   ```
+
+6. Run linting checks:
+   ```bash
+   npm run lint
+   ```
+
+---
+
+## Usage
+
+### Default User Credentials
+
+- **Admin**:
+  - Email: `admin123@gmail.com`
+  - Password: `admin123`
+
+- **Vendor**:
+  - Email: `vendor123@gmail.com`
+  - Password: `vendor123`
+
+- **Customer**:
+  - Email: `user@gmail.com`
+  - Password: `user123`
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+---
+
+## Contributing
+
+We welcome contributions! Please open an issue or submit a pull request to suggest improvements.

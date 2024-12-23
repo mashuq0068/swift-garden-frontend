@@ -37,6 +37,7 @@ const LoginPage = () => {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true)
     try {
       const res = await signIn({ email, password }).unwrap();
       console.log(res);
@@ -57,7 +58,7 @@ const LoginPage = () => {
       Cookies.set("token", res?.token);
       // setting user the persist redux store
       dispatch(setUser(user));
-      setLoading(true)
+    
       // if (auth.role) {
       //   if (auth.role === "VENDOR") {
       //     router.push("/vendor");

@@ -73,9 +73,10 @@ const CategoryManagement = () => {
 
       try {
         const res = await uploadPhoto(formData).unwrap();
+        console.log(res);
         setCloudinaryUrl(res?.data?.photo);
       } catch (error) {
-        console.error("File upload failed:", error);
+        console.log("File upload failed:", error);
       }
     }
   };

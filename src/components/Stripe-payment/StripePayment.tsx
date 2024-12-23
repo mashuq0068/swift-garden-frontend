@@ -29,7 +29,7 @@ const StripePaymentPage = () => {
     const createPaymentIntent = async () => {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:5000/api/orders", {
+        const response = await fetch("https://swift-garden-backend.vercel.app/api/orders", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -53,7 +53,7 @@ const StripePaymentPage = () => {
           throw new Error("Failed to create payment intent");
         }
       } catch (error) {
-        console.error("Error creating payment intent:", error);
+        console.log("Error creating payment intent:", error);
       } finally {
         setLoading(false);
       }
@@ -65,7 +65,12 @@ const StripePaymentPage = () => {
   const handlePayment = async () => {
     if (!clientSecret || !stripe || !elements) return;
 
-    const cardElement = elements.getElement(CardElement); // Get the card element
+    const cardElement = elements.getElement(CardElement);
+    if (!cardElement) {
+      console.log("CardElement is not found.");
+      return;
+    }
+     // Get the card element
     const { error, paymentIntent } = await stripe.confirmCardPayment(
       clientSecret,
       {
@@ -76,12 +81,12 @@ const StripePaymentPage = () => {
     );
 
     if (error) {
-      console.error("Payment failed:", error);
+      console.log("Payment failed:", error);
     } else if (paymentIntent.status === "succeeded") {
       // Handle successful payment
       try {
         const response = await fetch(
-          "http://localhost:5000/api/orders/confirm-payment",
+          "https://swift-garden-backend.vercel.app/api/orders/confirm-payment",
           {
             method: "POST",
             headers: {
@@ -98,7 +103,7 @@ const StripePaymentPage = () => {
           throw new Error("Payment confirmation failed");
         }
       } catch (error) {
-        console.error("Error confirming payment:", error);
+        console.log("Error confirming payment:", error);
       }
     }
   };

@@ -6,12 +6,11 @@ import {
   updateQuantity,
   clearCart,
 } from "@/redux/features/cart/cartSlice";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const CartPage: React.FC = () => {
   
-  const router = useRouter();
+  
   const dispatch = useAppDispatch();
   const cart = useAppSelector((state) => state.cart); 
   console.log(cart);// Get cart from Redux state

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 
 const SuccessPage = () => {
@@ -15,9 +16,9 @@ const SuccessPage = () => {
           Thank you for your purchase. Your order is being processed and will be shipped soon.
         </p>
         <div className="mt-8">
-          <a href="/" className="inline-block px-6 py-2 bg-green-500 text-white rounded-lg text-lg hover:bg-green-500 transition duration-300">
+          <Link href="/" className="inline-block px-6 py-2 bg-green-500 text-white rounded-lg text-lg hover:bg-green-500 transition duration-300">
             Return to Homepage
-          </a>
+          </Link>
         </div>
       </div>
     </div>

@@ -78,7 +78,7 @@ const ProductManagement = () => {
         const res = await uploadPhoto(formData).unwrap();
         setCloudinaryUrl(res?.data?.photo);
       } catch (error) {
-        console.error("File upload failed:", error);
+        console.log("File upload failed:", error);
       }
     }
     if (file) {
@@ -129,7 +129,7 @@ const ProductManagement = () => {
         setSelectedFile("");
       }
     } catch (error) {
-      console.error("Failed to save product:", error);
+      console.log("Failed to save product:", error);
       toast.error("Failed to create product");
       setSelectedFile("");
     }
@@ -144,7 +144,7 @@ const ProductManagement = () => {
       await deleteProduct(id);
       toast.success("Product deleted successfully");
     } catch (error) {
-      console.error("Failed to delete product:", error);
+      console.log("Failed to delete product:", error);
     }
   };
 

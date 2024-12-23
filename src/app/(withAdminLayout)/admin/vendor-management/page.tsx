@@ -38,7 +38,7 @@ const VendorManagement = () => {
       await deleteUser(id).unwrap();
       toast.success("User deleted successfully");
     } catch (error) {
-      console.error("Delete Error:", error);
+      console.log("Delete Error:", error);
       toast.error("Failed to delete user. Please try again.");
     }
   };

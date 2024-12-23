@@ -21,7 +21,7 @@ function isHydrateAction(action: Action): action is PayloadAction<RootState> {
 
 // Base query
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/api",
+  baseUrl: "https://swift-garden-backend.vercel.app/api",
   // credentials: "include",
   prepareHeaders: (headers) => {
     const token = Cookies.get("token");
@@ -55,7 +55,7 @@ const customBaseQuery: BaseQueryFn<
     return result;
   } catch (error) {
     // Handle errors
-    console.error("API request error:", error);
+    console.log("API request error:", error);
     return { error };
   } finally {
     // Set loading to false after the request is complete
