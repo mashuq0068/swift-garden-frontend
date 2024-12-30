@@ -42,7 +42,7 @@ console.log(category);
 
   return (
     <>
-    <div className=" min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div className=" min-h-screen container mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div className=" mx-auto  overflow-hidden">
         <div className="lg:flex gap-12">
           {/* Left Side: Image */}
@@ -190,7 +190,7 @@ console.log(category);
         </div>
       </div>
     </div>
-    <div className="min-h-screen px-6 ">
+    <div className="min-h-screen container mx-auto px-6 ">
           {/* <h1 className="text-center text-4xl mb-12 font-bold text-gray-800">
       Our <span className="text-green-500">Products</span>
     </h1> */}

@@ -20,10 +20,11 @@ const LoginPage = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // Using useEffect to handle navigation based on auth role
+  const [showCredentials, setShowCredentials] = useState(true); // State to toggle visibility
+
   useEffect(() => {
     if (auth.role) {
-      setLoading(false)
+      setLoading(false);
       if (auth.role === "VENDOR") {
         router.push("/vendor");
       } else if (auth.role === "ADMIN") {
@@ -34,45 +35,19 @@ const LoginPage = () => {
     }
   }, [auth.role, router]);
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
     try {
       const res = await signIn({ email, password }).unwrap();
-      console.log(res);
-      const userData = res?.data ?? {
-        name: null,
-        email: null,
-        role: null,
-        id: null,
-      };
-      console.log("login", userData);
       const user: IUser = {
-        id: userData?.id,
-        name: userData?.name,
-        email: userData?.email,
-        role: userData?.role,
+        id: res?.data?.id || null,
+        name: res?.data?.name || null,
+        email: res?.data?.email || null,
+        role: res?.data?.role || null,
       };
-      // setting cookies to token
       Cookies.set("token", res?.token);
-      // setting user the persist redux store
       dispatch(setUser(user));
-    
-      // if (auth.role) {
-      //   if (auth.role === "VENDOR") {
-      //     router.push("/vendor");
-      //     setLoading(false);
-      //   } else if (auth.role === "ADMIN") {
-      //     router.push("/admin");
-      //     setLoading(false);
-      //   } else {
-      //     router.push("/");
-      //     setLoading(false);
-      //   }
-      // } else {
-      //   setLoading(true);
-      // }
     } catch (error) {
       toast.error(
         (error as { message?: string })?.message || "Something went wrong"
@@ -81,7 +56,40 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 relative">
+      {/* Demo Credentials Tooltip */}
+      {showCredentials && (
+        <div className="absolute lg:block hidden top-8 right-8 bg-white shadow-lg border border-gray-200 rounded-lg p-6 w-80 z-50">
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="text-lg font-bold text-gray-700">Login Credentials</h3>
+            <button
+              onClick={() => setShowCredentials(false)}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              &#x2715; {/* Close button */}
+            </button>
+          </div>
+          <div className="space-y-2 text-sm">
+            <div>
+              <strong>Customer:</strong> <br />
+              Email: <span className="text-gray-600">user123@gmail.com</span> <br />
+              Password: <span className="text-gray-600">user123</span>
+            </div>
+            <div>
+              <strong>Vendor:</strong> <br />
+              Email: <span className="text-gray-600">vendor123@gmail.com</span> <br />
+              Password: <span className="text-gray-600">vendor123</span>
+            </div>
+            <div>
+              <strong>Admin:</strong> <br />
+              Email: <span className="text-gray-600">admin123@gmail.com</span> <br />
+              Password: <span className="text-gray-600">admin123</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Login Form */}
       <div className="rounded-lg flex justify-center w-full max-w-4xl">
         <div className="w-full md:w-1/2 p-8 space-y-6">
           <h2 className="text-3xl font-bold text-gray-800 text-center">

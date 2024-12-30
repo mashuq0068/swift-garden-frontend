@@ -7,215 +7,9 @@ import useLoadingStore from "@/store/loadingStore";
 import Aos from "aos";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 
 const Products = () => {
-  // const products = [
-  //   {
-  //     id: 1,
-  //     title: "Fresh Organic Fruit (50gm)",
-  //     description: "Delicious organic fruit packed with nutrients.",
-  //     price: 150,
-  //     image: "/images/veg-1.png",
-  //     categoryId: "1a67d6ba-5532-4fbb-a80b-83e6ef509920",
-  //     shopId: "02bc7036-8505-415c-a0dc-e59fd99d3043",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Orange Juice (5ltr)",
-  //     description: "Freshly squeezed orange juice.",
-  //     price: 150,
-  //     image: "/images/veg-2.png",
-  //     categoryId: "1a67d6ba-5532-4fbb-a80b-83e6ef509920",
-  //     shopId: "02bc7036-8505-415c-a0dc-e59fd99d3043",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Fresh Dried Almond (50g)",
-  //     description: "High-quality dried almonds.",
-  //     price: 200,
-  //     image: "/images/veg-3.png",
-  //     categoryId: "1a67d6ba-5532-4fbb-a80b-83e6ef509920",
-  //     shopId: "02bc7036-8505-415c-a0dc-e59fd99d3043",
-  //   },
-  //   {
-  //     id: 4,
-  //     title: "Shrimp - Jumbo (5 lb)",
-  //     description: "Fresh jumbo shrimps.",
-  //     price: 230,
-  //     image: "/images/veg-4.png",
-  //     categoryId: "d5f537f2-5823-40bd-a10f-e94523a45b0e",
-  //     shopId: "071dddd9-33c8-4dd7-9466-0c335c8b69e5",
-  //   },
-  //   {
-  //     id: 5,
-  //     title: "Sp. Red Fresh Guava",
-  //     description: "Sweet and juicy guavas.",
-  //     price: 42,
-  //     image: "/images/veg-6.png",
-  //     categoryId: "d5f537f2-5823-40bd-a10f-e94523a45b0e",
-  //     shopId: "071dddd9-33c8-4dd7-9466-0c335c8b69e5",
-  //   },
-  //   {
-  //     id: 1,
-  //     title: "Fresh Organic Fruit (50gm)",
-  //     description: "Delicious organic fruit packed with nutrients.",
-  //     price: 150,
-  //     image: "/images/veg-1.png",
-  //     categoryId: "85a8ee6f-ce45-44b8-a77f-8fa85520c81a",
-  //     shopId: "278e0e8b-2f50-448e-8948-411eebf52dee",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Orange Juice (5ltr)",
-  //     description: "Freshly squeezed orange juice.",
-  //     price: 150,
-  //     image: "/images/veg-2.png",
-  //     categoryId: "85a8ee6f-ce45-44b8-a77f-8fa85520c81a",
-  //     shopId: "278e0e8b-2f50-448e-8948-411eebf52dee",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Fresh Dried Almond (50g)",
-  //     description: "High-quality dried almonds.",
-  //     price: 200,
-  //     image: "/images/veg-3.png",
-  //     categoryId: "85a8ee6f-ce45-44b8-a77f-8fa85520c81a",
-  //     shopId: "278e0e8b-2f50-448e-8948-411eebf52dee",
-  //   },
-  //   {
-  //     id: 4,
-  //     title: "Shrimp - Jumbo (5 lb)",
-  //     description: "Fresh jumbo shrimps.",
-  //     price: 230,
-  //     image: "/images/veg-4.png",
-  //     categoryId: "85a8ee6f-ce45-44b8-a77f-8fa85520c81a",
-  //     shopId: "278e0e8b-2f50-448e-8948-411eebf52dee",
-  //   },
-  //   {
-  //     id: 5,
-  //     title: "Sp. Red Fresh Guava",
-  //     description: "Sweet and juicy guavas.",
-  //     price: 42,
-  //     image: "/images/veg-6.png",
-  //     categoryId: "60e4a1a1-8572-4022-82f0-ffa3791a6f57",
-  //     shopId: "5dbf2a54-3982-48d1-b475-c368250dd36a",
-  //   },
-  //   {
-  //     id: 1,
-  //     title: "Fresh Organic Fruit (50gm)",
-  //     description: "Delicious organic fruit packed with nutrients.",
-  //     price: 150,
-  //     image: "/images/veg-1.png",
-  //     categoryId: "60e4a1a1-8572-4022-82f0-ffa3791a6f57",
-  //     shopId: "5dbf2a54-3982-48d1-b475-c368250dd36a",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Orange Juice (5ltr)",
-  //     description: "Freshly squeezed orange juice.",
-  //     price: 150,
-  //     image: "/images/veg-2.png",
-  //     categoryId: "60e4a1a1-8572-4022-82f0-ffa3791a6f57",
-  //     shopId: "5dbf2a54-3982-48d1-b475-c368250dd36a",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Fresh Dried Almond (50g)",
-  //     description: "High-quality dried almonds.",
-  //     price: 200,
-  //     image: "/images/veg-3.png",
-  //     categoryId: "d8c8969c-7248-4b65-af14-c369179ff36d",
-  //     shopId: "c31dd2cd-5f49-493f-91d3-0fdd2bea115c",
-  //   },
-  //   {
-  //     id: 4,
-  //     title: "Shrimp - Jumbo (5 lb)",
-  //     description: "Fresh jumbo shrimps.",
-  //     price: 230,
-  //     image: "/images/veg-4.png",
-  //     categoryId: "d8c8969c-7248-4b65-af14-c369179ff36d",
-  //     shopId: "c31dd2cd-5f49-493f-91d3-0fdd2bea115c",
-  //   },
-  //   {
-  //     id: 5,
-  //     title: "Sp. Red Fresh Guava",
-  //     description: "Sweet and juicy guavas.",
-  //     price: 42,
-  //     image: "/images/veg-6.png",
-  //     categoryId: "d8c8969c-7248-4b65-af14-c369179ff36d",
-  //     shopId: "c31dd2cd-5f49-493f-91d3-0fdd2bea115c",
-  //   },
-  //   {
-  //     id: 4,
-  //     title: "Shrimp - Jumbo (5 lb)",
-  //     description: "Fresh jumbo shrimps.",
-  //     price: 230,
-  //     image: "/images/veg-4.png",
-  //     categoryId: "d8c8969c-7248-4b65-af14-c369179ff36d",
-  //     shopId: "c31dd2cd-5f49-493f-91d3-0fdd2bea115c",
-  //   },
-  //   {
-  //     id: 5,
-  //     title: "Sp. Red Fresh Guava",
-  //     description: "Sweet and juicy guavas.",
-  //     price: 42,
-  //     image: "/images/veg-6.png",
-  //     categoryId: "0b2c1eed-65cc-4afc-ab8b-185fa24b725a",
-  //     shopId: "1474b7d6-10d6-4188-ab34-c31dec48b19d",
-  //   },
-  //   {
-  //     id: 1,
-  //     title: "Fresh Organic Fruit (50gm)",
-  //     description: "Delicious organic fruit packed with nutrients.",
-  //     price: 150,
-  //     image: "/images/veg-1.png",
-  //     categoryId: "0b2c1eed-65cc-4afc-ab8b-185fa24b725a",
-  //     shopId: "1474b7d6-10d6-4188-ab34-c31dec48b19d",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Orange Juice (5ltr)",
-  //     description: "Freshly squeezed orange juice.",
-  //     price: 150,
-  //     categoryId: "0b2c1eed-65cc-4afc-ab8b-185fa24b725a",
-  //     shopId: "1474b7d6-10d6-4188-ab34-c31dec48b19d",
-  //   },
-  //   {
-  //     id: 4,
-  //     title: "Shrimp - Jumbo (5 lb)",
-  //     description: "Fresh jumbo shrimps.",
-  //     price: 230,
-  //     image: "/images/veg-4.png",
-  //     categoryId: "0b2c1eed-65cc-4afc-ab8b-185fa24b725a",
-  //     shopId: "1474b7d6-10d6-4188-ab34-c31dec48b19d",
-  //   },
-  //   {
-  //     id: 5,
-  //     title: "Sp. Red Fresh Guava",
-  //     description: "Sweet and juicy guavas.",
-  //     price: 42,
-  //     categoryId: "350983d8-1955-4a0f-9e0d-d91a3554d479",
-  //     shopId: "278e0e8b-2f50-448e-8948-411eebf52dee",
-  //   },
-  //   {
-  //     id: 1,
-  //     title: "Fresh Organic Fruit (50gm)",
-  //     description: "Delicious organic fruit packed with nutrients.",
-  //     price: 150,
-  //     image: "/images/veg-1.png",
-  //     categoryId: "350983d8-1955-4a0f-9e0d-d91a3554d479",
-  //     shopId: "278e0e8b-2f50-448e-8948-411eebf52dee",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Orange Juice (5ltr)",
-  //     description: "Freshly squeezed orange juice.",
-  //     price: 150,
-  //     categoryId: "350983d8-1955-4a0f-9e0d-d91a3554d479",
-  //     shopId: "278e0e8b-2f50-448e-8948-411eebf52dee",
-  //   },
-  // ];
   const search = useAppSelector((state) => state.search);
   const [url, seturl] = useState(
     "https://swift-garden-backend.vercel.app/api/products"
@@ -232,12 +26,6 @@ const Products = () => {
 
     try {
       const filterParams = new URLSearchParams();
-
-      // Add search term
-      if (search.searchTerm) {
-        filterParams.append("search", search.searchTerm);
-      }
-
       // Add categories
       if (filter.categories.length > 0) {
         filter.categories.forEach((category) => {
@@ -261,9 +49,7 @@ const Products = () => {
         ); // Append filter params to the URL
       }
 
-      const response = await fetch(
-        `${url}`
-      );
+      const response = await fetch(`${url}`);
 
       if (!response.ok) {
         throw new Error("Failed to fetch products");
@@ -280,7 +66,18 @@ const Products = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, [search.searchTerm, filter.categories, filter.priceRange]);
+  }, [filter.categories, filter.priceRange]);
+
+  useEffect(() => {
+    if (!search.searchTerm) {
+      fetchProducts() // Reset to all products when search.searchTerm term is cleared
+      return;
+    }
+    const filtered = products.filter((product: any) =>
+      product.name.toLowerCase().includes(search.searchTerm)
+    );
+    setProducts(filtered);
+  }, [search.searchTerm]);
 
   useEffect(() => {
     Aos.init({

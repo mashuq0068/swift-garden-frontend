@@ -27,7 +27,7 @@ const OrderHistoryPage = () => {
   );
 
   return (
-    <div className="container mx-auto">
+    <div className="container p-12 mx-auto">
       <SectionHeader title="Order History" />
       <div className="wrapper">
         {userOrders && userOrders.length > 0 ? (

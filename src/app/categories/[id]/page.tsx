@@ -1,19 +1,36 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useGetSingleCategoryQuery } from "@/redux/features/category/category.api";
+import { useAppSelector } from "@/redux/hooks";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const CategoryProductsPage = () => {
   const params = useParams();
+  const { searchTerm } = useAppSelector((state) => state.search);
   const { data } = useGetSingleCategoryQuery(params.id);
   const router = useRouter();
+  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
+
+  // Handle product click
   const handleProductClick = (id: string) => {
     router.push(`/products/${id}`);
   };
 
-  console.log(data?.data);
+  // Filter products based on search term
+  useEffect(() => {
+    if (data?.data?.products) {
+      const products = data.data.products;
+      const filtered = searchTerm
+        ? products.filter((product: any) =>
+            product.name.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        : products;
 
+      setFilteredProducts(filtered);
+    }
+  }, [searchTerm, data]);
   return (
     <div className="min-h-screen mt-14 ">
       {/* <h1 className="text-center text-4xl mb-12 font-bold text-gray-800">
@@ -21,7 +38,7 @@ const CategoryProductsPage = () => {
 </h1> */}
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {data?.data?.products?.map((product: any, i: number) => (
+        {filteredProducts?.map((product: any, i: number) => (
             <div
               onClick={() => handleProductClick(product.id)}
               key={i}

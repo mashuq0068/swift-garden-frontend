@@ -4,6 +4,9 @@ import "aos/dist/aos.css";
 import Features from "@/components/Home/Features";
 import dynamic from "next/dynamic";
 import Products from "@/components/Home/Products";
+import CustomerReviews from "@/components/shop/CustomerReviews";
+import Coupon from "@/components/Home/Coupon"
+import BuyingProcess from "@/components/Home/BuyingProcess"
 const Category = dynamic(() => import("@/components/Home/Category"), {
   ssr: false, // Disable SSR for this component
 });
@@ -26,6 +29,15 @@ export default function Home() {
       </section>
       <section>
         <Products />
+      </section>
+      <section>
+        <Coupon />
+      </section>
+      <section>
+        <BuyingProcess />
+      </section>
+      <section>
+        <CustomerReviews />
       </section>
     </main>
   );

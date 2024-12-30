@@ -15,7 +15,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     // Public pages: Login, Register, Home
-    const publicPages = ["/", "/login", "/registration"];
+    const publicPages = ["/", "/login", "/registration","/shops",];
 
     // If the current route is not public and the user has no role, redirect to login
     if (!publicPages.includes(pathname) && !auth?.role) {

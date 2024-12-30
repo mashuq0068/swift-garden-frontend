@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useMemo, useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 import { PiShoppingCartLight } from "react-icons/pi";
 import {
   FaTachometerAlt,
@@ -37,6 +37,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { logout } from "@/redux/features/auth/authSlice";
+import Menu from "./Menu";
 
 function generateAvatarColor(name: string): string {
   // Simple hash function to convert name into a color
@@ -113,7 +114,13 @@ const Navbar = () => {
   // Search submission handler
   const handleSearchSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const searchTerm = (e.target as HTMLFormElement).search.value;
+    // const searchTerm = (e.target as HTMLFormElement).search.value;
+    // dispatch(setSearchTerm(searchTerm));
+  };
+  // Search submission handler
+  const handleSearchChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
+    const searchTerm = e.target.value;
     dispatch(setSearchTerm(searchTerm));
   };
   // make dashboard dynamic url
@@ -124,7 +131,7 @@ const Navbar = () => {
     pathName.includes("/admin") || pathName.includes("/vendor");
 
   return (
-    <div className={`${isAdminOrVendorPath ? "hidden" : "block"}`}>
+    <div className={`${isAdminOrVendorPath ? "hidden" : "block"} `}>
       <div className="py-6 px-4 container mx-auto sticky top-0 z-50">
         <div className="flex flex-wrap justify-between items-center container mx-auto">
           {/* Logo and drawer toggle */}
@@ -144,6 +151,7 @@ const Navbar = () => {
             className="hidden lg:flex items-center justify-center flex-1"
           >
             <input
+              onChange={handleSearchChange}
               type="text"
               name="search"
               placeholder="Search products..."
@@ -236,7 +244,7 @@ const Navbar = () => {
             )}
           </div>
         </div>
-
+  <Menu/>
         {/* Mobile Search Bar */}
         <div className="lg:hidden flex mt-4">
           <input
@@ -255,11 +263,11 @@ const Navbar = () => {
         open={isOpen}
         onClose={toggleDrawer}
         direction="left"
-        className="w-64 font-normal text-gray-600 shadow-lg"
+        className="w-64 font-normal sticky top-0 h-screen overflow-y-scroll bg-white z-50 text-gray-600 shadow-lg"
       >
         <div className="p-4">
           <h2 className="text-xl font-semibold mb-4">Menu</h2>
-          <ul className="space-y-3">
+          <ul className="space-y-3  bg-white z-50">
             {role !== "USER" && (
               <Link
                 href={dashboardUrl}

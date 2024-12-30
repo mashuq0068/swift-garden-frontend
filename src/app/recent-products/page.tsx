@@ -20,12 +20,11 @@ const RecentProductsPage = () => {
       Our <span className="text-green-500">Products</span>
     </h1> */}
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {data?.data && data.data.length > 0 ? (
-            data.data.map((recentProduct: any, i: number) => (
+        {data?.data && data.data.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {data.data.map((recentProduct: any, i: number) => (
               <div
                 onClick={() => handleProductClick(recentProduct?.product?.id)}
-                
                 key={i}
                 className="bg-white cursor-pointer rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
               >
@@ -56,11 +55,13 @@ const RecentProductsPage = () => {
                   </div>
                 </div>
               </div>
-            ))
-          ) : (
-            <p>No recent products found.</p>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center  text-gray-500">
+            No recent found. Start shopping to place your first recent!
+          </div>
+        )}
       </div>
     </div>
   );

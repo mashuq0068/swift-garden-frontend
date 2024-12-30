@@ -9,7 +9,7 @@ const Logo = () => {
       </div>
 
       {/* Text Section */}
-      <h1 className="text-2xl md:text-3xl font-bold text-green-500">
+      <h1 className="text-lg md:text-3xl font-bold text-green-500">
         Swift <span className="text-green-500">Garden</span>
       </h1>
     </div>
