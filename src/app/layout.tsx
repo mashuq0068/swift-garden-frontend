@@ -14,6 +14,7 @@ const workSans = Work_Sans({
 import ReduxProvider from "@/redux/ReduxProvider";
 import Navbar from "@/components/Shared/Navbar";
 import RootLayout from "@/components/Layout/RootLayout";
+import Footer from "@/components/Shared/Footer";
 
 // export const metadata: Metadata = {
 //   title: "Swift Garden",
@@ -35,6 +36,9 @@ export default function MainLayout({
             <Navbar />
           </header>
           <RootLayout>{children}</RootLayout>
+          <footer>
+            <Footer />
+          </footer>
         </ReduxProvider>
       </body>
     </html>
